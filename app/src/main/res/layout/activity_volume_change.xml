@@ -10,14 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.wordpress.gatarblog.dzwonnik.VolumeChange">
 
-    <TimePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/timePicker"
-        android:timePickerMode="spinner"/>
-
     <CheckBox
         android:text="Sr"
         android:layout_width="wrap_content"
@@ -81,22 +73,66 @@
         android:layout_alignLeft="@+id/checkMonday"
         android:layout_alignStart="@+id/checkMonday" />
 
-    <Button
-        android:text="Dodaj"
+    <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/checkSunday"
-        android:layout_alignLeft="@+id/checkThursday"
+        android:id="@+id/timePicker"
+        android:timePickerMode="spinner"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textVolume"
+        android:layout_alignStart="@+id/buttonAccept"
+        android:id="@+id/seekVolume"
+        android:layout_alignEnd="@+id/buttonDelete"
+        android:max="100" />
+
+    <CheckBox
+        android:text="Wibracja"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkVibra"
+        android:layout_below="@+id/seekVolume"
+        android:layout_alignStart="@+id/seekVolume"
+        android:layout_marginTop="15dp"
+        android:checked="true" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textVolume"
+        android:layout_alignEnd="@+id/seekVolume"
+        android:id="@+id/textVolumePercent" />
+
+    <Button
+        android:text="Akceptuj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonAccept"
+        android:layout_below="@+id/checkThursday"
         android:layout_alignStart="@+id/checkThursday"
-        android:id="@+id/button" />
+        android:layout_marginTop="12dp" />
 
     <Button
         android:text="Usuń"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/checkSunday"
-        android:layout_alignRight="@+id/checkWednesday"
-        android:layout_alignEnd="@+id/checkWednesday"
-        android:id="@+id/button2" />
+        android:id="@+id/buttonDelete"
+        android:layout_alignBaseline="@+id/buttonAccept"
+        android:layout_alignBottom="@+id/buttonAccept"
+        android:layout_alignEnd="@+id/checkWednesday" />
+
+    <TextView
+        android:text="Głośność"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:id="@+id/textVolume"
+        android:layout_below="@+id/buttonAccept"
+        android:layout_alignStart="@+id/seekVolume" />
 
 </RelativeLayout>
