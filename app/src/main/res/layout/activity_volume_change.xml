@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_volume_change"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.wordpress.gatarblog.dzwonnik.VolumeChange">
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/timePicker"
+        android:timePickerMode="spinner"/>
+
+    <CheckBox
+        android:text="Sr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkWednesday"
+        android:layout_alignBaseline="@+id/checkTuesday"
+        android:layout_alignBottom="@+id/checkTuesday"
+        android:layout_alignRight="@+id/timePicker"
+        android:layout_alignEnd="@+id/timePicker" />
+
+    <CheckBox
+        android:text="Wt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkTuesday"
+        android:layout_above="@+id/checkThursday"
+        android:layout_centerHorizontal="true" />
+
+    <CheckBox
+        android:text="Pon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkMonday"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/timePicker"
+        android:layout_alignStart="@+id/timePicker" />
+
+    <CheckBox
+        android:text="Sob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkSaturday"
+        android:layout_below="@+id/checkWednesday"
+        android:layout_alignLeft="@+id/checkWednesday"
+        android:layout_alignStart="@+id/checkWednesday" />
+
+    <CheckBox
+        android:text="Nd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkSunday"
+        android:layout_below="@+id/checkFriday"
+        android:layout_alignLeft="@+id/checkFriday"
+        android:layout_alignStart="@+id/checkFriday" />
+
+    <CheckBox
+        android:text="Pt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkFriday"
+        android:layout_below="@+id/checkTuesday"
+        android:layout_alignLeft="@+id/checkTuesday"
+        android:layout_alignStart="@+id/checkTuesday" />
+
+    <CheckBox
+        android:text="Czw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkThursday"
+        android:layout_below="@+id/checkMonday"
+        android:layout_alignLeft="@+id/checkMonday"
+        android:layout_alignStart="@+id/checkMonday" />
+
+    <Button
+        android:text="Dodaj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkSunday"
+        android:layout_alignLeft="@+id/checkThursday"
+        android:layout_alignStart="@+id/checkThursday"
+        android:id="@+id/button" />
+
+    <Button
+        android:text="Usuń"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkSunday"
+        android:layout_alignRight="@+id/checkWednesday"
+        android:layout_alignEnd="@+id/checkWednesday"
+        android:id="@+id/button2" />
+
+</RelativeLayout>
