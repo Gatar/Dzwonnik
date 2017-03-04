@@ -15,7 +15,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VolumeChange"></activity>
+        <activity android:name=".RingtoneStateSetActivity"></activity>
+        <receiver android:name=".RingtoneSwitcher"></receiver>
     </application>
 
 </manifest>

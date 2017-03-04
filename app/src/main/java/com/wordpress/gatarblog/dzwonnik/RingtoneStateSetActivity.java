@@ -1,5 +1,7 @@
 package com.wordpress.gatarblog.dzwonnik;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +18,7 @@ import java.util.HashSet;
 /**
  * Class responsible for get from user information to create new/update existing single ringtone sets state.
  */
-public class VolumeChange extends AppCompatActivity {
+public class RingtoneStateSetActivity extends AppCompatActivity {
 
     private SeekBar volumeSeek;
     private TextView volumeTextView;
@@ -25,8 +27,14 @@ public class VolumeChange extends AppCompatActivity {
     private CheckBox vibrationCheck;
     private CheckBox[] weekDay = new CheckBox[7];
     private TimePicker timePicker;
+    private RingtoneState state;
 
     private int volumeValue = 0;
+
+    @Override
+    public Context getBaseContext() {
+        return super.getBaseContext();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,7 @@ public class VolumeChange extends AppCompatActivity {
 
         volumeSeek.setOnSeekBarChangeListener(volumeSeekBarBehaviour());
         acceptButton.setOnClickListener(acceptButtonBehaviour());
+        deleteButton.setOnClickListener(deleteButtonBehaviour());
     }
 
     private void createViewObjectReferences(){
@@ -59,7 +68,8 @@ public class VolumeChange extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RingtoneState state = createRingtoneState();
+                state = createRingtoneState();
+                state.useRingtoneState();
                 showStateInConsole(state);
             }
         };
@@ -70,7 +80,7 @@ public class VolumeChange extends AppCompatActivity {
         int minute = timePicker.getCurrentMinute();
         boolean vibration = vibrationCheck.isChecked();
 
-        RingtoneState state = new RingtoneState(volumeValue,vibration,hour,minute);
+        RingtoneState state = new RingtoneState(volumeValue,vibration,hour,minute,getBaseContext());
         state.setWeekDays(getWeekDays());
         return state;
     }
@@ -114,6 +124,23 @@ public class VolumeChange extends AppCompatActivity {
         for(WeekDays day : state.getWeekDays()){
             System.out.println("Day: " + day);
         }
+    }
+
+    private View.OnClickListener deleteButtonBehaviour(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(state != null){
+                    state.removeRingtoneState();
+                }
+                backToMainActivity();
+            }
+        };
+    }
+
+    private void backToMainActivity(){
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 
 
