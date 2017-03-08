@@ -5,13 +5,14 @@ package com.wordpress.gatarblog.dzwonnik;
  */
 
 public enum WeekDays {
+    Sunday,
     Monday,
     Tuesday,
     Wednesday,
     Thursday,
     Friday,
-    Saturday,
-    Sunday;
+    Saturday;
+
 
     public static final WeekDays value[] = values();
 }

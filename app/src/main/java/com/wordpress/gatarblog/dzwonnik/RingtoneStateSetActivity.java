@@ -54,13 +54,13 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
         acceptButton = (Button) findViewById(R.id.buttonAccept);
         deleteButton = (Button) findViewById(R.id.buttonDelete);
         vibrationCheck = (CheckBox) findViewById(R.id.checkVibra);
-        weekDay[0] = (CheckBox) findViewById(R.id.checkMonday);
-        weekDay[1] = (CheckBox) findViewById(R.id.checkTuesday);
-        weekDay[2] = (CheckBox) findViewById(R.id.checkWednesday);
-        weekDay[3] = (CheckBox) findViewById(R.id.checkThursday);
-        weekDay[4] = (CheckBox) findViewById(R.id.checkFriday);
-        weekDay[5] = (CheckBox) findViewById(R.id.checkSaturday);
-        weekDay[6] = (CheckBox) findViewById(R.id.checkSunday);
+        weekDay[1] = (CheckBox) findViewById(R.id.checkMonday);
+        weekDay[2] = (CheckBox) findViewById(R.id.checkTuesday);
+        weekDay[3] = (CheckBox) findViewById(R.id.checkWednesday);
+        weekDay[4] = (CheckBox) findViewById(R.id.checkThursday);
+        weekDay[5] = (CheckBox) findViewById(R.id.checkFriday);
+        weekDay[6] = (CheckBox) findViewById(R.id.checkSaturday);
+        weekDay[0] = (CheckBox) findViewById(R.id.checkSunday);  //Android's Calendar start counting days of the week from Sunday as first....
         timePicker = (TimePicker) findViewById(R.id.timePicker);
     }
 
@@ -71,6 +71,7 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
                 state = createRingtoneState();
                 state.useRingtoneState();
                 showStateInConsole(state);
+                backToMainActivity();
             }
         };
     }

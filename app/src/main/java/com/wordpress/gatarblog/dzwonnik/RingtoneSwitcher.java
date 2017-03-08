@@ -16,7 +16,7 @@ public class RingtoneSwitcher extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String message = "Volume: " + intent.getIntExtra(EXTRA_VOLUME,-1) + " Vibration " + intent.getBooleanExtra(EXTRA_VIBRATION,false);
+        String message = "CHANGES!!!! New Volume: " + intent.getIntExtra(EXTRA_VOLUME,-1) + " Vibration " + intent.getBooleanExtra(EXTRA_VIBRATION,false) + " time:" + System.currentTimeMillis();
         System.out.println(message);
         Toast.makeText(context,message,Toast.LENGTH_LONG).show();
     }
