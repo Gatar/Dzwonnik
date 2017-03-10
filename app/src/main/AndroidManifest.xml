@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RingtoneStateSetActivity"></activity>
+        <activity android:name=".SetRingtoneStateActivity"></activity>
         <receiver android:name=".RingtoneSwitcher"></receiver>
     </application>
 

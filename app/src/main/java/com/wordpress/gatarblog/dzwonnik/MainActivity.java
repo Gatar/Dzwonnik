@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToVolumeChange(){
-        Intent intent = new Intent(this,RingtoneStateSetActivity.class);
+        Intent intent = new Intent(this,SetRingtoneStateActivity.class);
         startActivity(intent);
     }
 

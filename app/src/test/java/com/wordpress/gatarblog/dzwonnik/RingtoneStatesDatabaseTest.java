@@ -2,6 +2,7 @@ package com.wordpress.gatarblog.dzwonnik;
 
 import android.content.Context;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +19,11 @@ import static org.junit.Assert.*;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class RingtoneSwitcherDatabaseTest {
+public class RingtoneStatesDatabaseTest {
 
 
     private Context context;
-    private RingtoneSwitcherDatabase database;
+    private RingtoneStatesDatabase database;
 
     private RingtoneState stateFirst = createAndFill(20, 10, 30, true, false);
     private RingtoneState stateSecond = createAndFill(80, 15, 0, false, true);
@@ -30,8 +31,13 @@ public class RingtoneSwitcherDatabaseTest {
     @Before
     public void setUp() throws Exception {
         context = RuntimeEnvironment.application;
-        context.deleteDatabase(RingtoneSwitcherDatabase.DATABASE_NAME);
-        database = new RingtoneSwitcherDatabaseImpl(context);
+        context.deleteDatabase(RingtoneStatesDatabase.DATABASE_NAME);
+        database = new RingtoneStatesDatabaseImpl(context);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        database.cleanDatabase();
     }
 
     @Test

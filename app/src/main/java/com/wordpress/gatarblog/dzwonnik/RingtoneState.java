@@ -128,7 +128,7 @@ public class RingtoneState {
                 intent.putExtra(EXTRA_VIBRATION,vibration);
                 intent.putExtra(EXTRA_VOLUME,volumeValue);
                 alarmIntent = PendingIntent.getBroadcast(context, generateAlarmId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
 
             private int generateAlarmId(){
@@ -136,6 +136,8 @@ public class RingtoneState {
             }
 
         }
+
+
 
     @Override
     public boolean equals(Object o) {

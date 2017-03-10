@@ -9,14 +9,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 
-public class RingtoneSwitcherDatabaseImpl extends SQLiteOpenHelper implements RingtoneSwitcherDatabase{
+public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements RingtoneStatesDatabase {
 
     private SQLiteDatabase db;
-    private Context context;
 
-    public RingtoneSwitcherDatabaseImpl(Context context) {
+    public RingtoneStatesDatabaseImpl(Context context) {
         super(context, DATABASE_NAME, null, 1);
-        this.context = context;
     }
 
     @Override

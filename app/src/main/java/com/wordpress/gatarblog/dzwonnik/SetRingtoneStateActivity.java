@@ -11,10 +11,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.Calendar;
+
 /**
  * Class responsible for get from user information to create new/update existing single ringtone sets state.
  */
-public class RingtoneStateSetActivity extends AppCompatActivity {
+public class SetRingtoneStateActivity extends AppCompatActivity {
 
     private SeekBar volumeSeek;
     private TextView volumeTextView;
@@ -66,8 +68,10 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
             public void onClick(View v) {
                 state = createRingtoneState();
                 state.setWeekDays(getWeekDaysFromUser());
-                state.useRingtoneState();
-                showStateInConsole(state);
+                if(shouldBeAlarmStartedNow(state)) {
+                    state.useRingtoneState();
+                    showStateInConsole(state);
+                }
                 backToMainActivity();
             }
         };
@@ -78,8 +82,7 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
         int minute = timePicker.getCurrentMinute();
         boolean vibration = vibrationCheck.isChecked();
 
-        RingtoneState state = new RingtoneState(volumeValue,vibration,hour,minute,getBaseContext());
-        return state;
+        return new RingtoneState(volumeValue,vibration,hour,minute,getBaseContext());
     }
 
     /**
@@ -92,6 +95,20 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
             week[i] = weekDay[i].isChecked();
         }
         return week;
+    }
+
+    private boolean shouldBeAlarmStartedNow(RingtoneState state){
+        return state.getWeekDays()[getActualDayOfWeek()];
+    }
+
+    private int getActualDayOfWeek(){
+        final int CALENDAR_DAY_OF_WEEK_SHIFT = 2;
+        Calendar calendar;
+        calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        if(day == Calendar.SUNDAY) return 6;
+        else return day - CALENDAR_DAY_OF_WEEK_SHIFT;
     }
 
     private SeekBar.OnSeekBarChangeListener volumeSeekBarBehaviour (){

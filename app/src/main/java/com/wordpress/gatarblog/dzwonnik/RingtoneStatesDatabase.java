@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Internal SQLite database class for remember RingtoneStates.
  */
-public interface RingtoneSwitcherDatabase {
+public interface RingtoneStatesDatabase {
 
     String DATABASE_NAME = "switcherDatabase.db";
     String TABLE_NAME = "switchers";
