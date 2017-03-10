@@ -11,10 +11,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.HashSet;
-
 /**
  * Class responsible for get from user information to create new/update existing single ringtone sets state.
  */
@@ -54,13 +50,13 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
         acceptButton = (Button) findViewById(R.id.buttonAccept);
         deleteButton = (Button) findViewById(R.id.buttonDelete);
         vibrationCheck = (CheckBox) findViewById(R.id.checkVibra);
-        weekDay[1] = (CheckBox) findViewById(R.id.checkMonday);
-        weekDay[2] = (CheckBox) findViewById(R.id.checkTuesday);
-        weekDay[3] = (CheckBox) findViewById(R.id.checkWednesday);
-        weekDay[4] = (CheckBox) findViewById(R.id.checkThursday);
-        weekDay[5] = (CheckBox) findViewById(R.id.checkFriday);
-        weekDay[6] = (CheckBox) findViewById(R.id.checkSaturday);
-        weekDay[0] = (CheckBox) findViewById(R.id.checkSunday);  //Android's Calendar start counting days of the week from Sunday as first....
+        weekDay[0] = (CheckBox) findViewById(R.id.checkMonday);
+        weekDay[1] = (CheckBox) findViewById(R.id.checkTuesday);
+        weekDay[2] = (CheckBox) findViewById(R.id.checkWednesday);
+        weekDay[3] = (CheckBox) findViewById(R.id.checkThursday);
+        weekDay[4] = (CheckBox) findViewById(R.id.checkFriday);
+        weekDay[5] = (CheckBox) findViewById(R.id.checkSaturday);
+        weekDay[6] = (CheckBox) findViewById(R.id.checkSunday);
         timePicker = (TimePicker) findViewById(R.id.timePicker);
     }
 
@@ -69,6 +65,7 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 state = createRingtoneState();
+                state.setWeekDays(getWeekDaysFromUser());
                 state.useRingtoneState();
                 showStateInConsole(state);
                 backToMainActivity();
@@ -82,18 +79,19 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
         boolean vibration = vibrationCheck.isChecked();
 
         RingtoneState state = new RingtoneState(volumeValue,vibration,hour,minute,getBaseContext());
-        state.setWeekDays(getWeekDays());
         return state;
     }
 
-    private HashSet<WeekDays> getWeekDays(){
-        final int WEEK_DAYS_NUMBER = 7;
-        HashSet<WeekDays> days = new HashSet<>();
-
-        for(int i = 0; i < WEEK_DAYS_NUMBER; i++){
-            if(weekDay[i].isChecked()) days.add(WeekDays.value[i]);
+    /**
+     * Read states of week days check boxes from UI.
+     * @return array of booleans where 0 - monday, 1 - tuesday....
+     */
+    private boolean[] getWeekDaysFromUser(){
+        boolean[] week = new boolean[7];
+        for(int i = 0; i < weekDay.length; i++){
+            week[i] = weekDay[i].isChecked();
         }
-        return days;
+        return week;
     }
 
     private SeekBar.OnSeekBarChangeListener volumeSeekBarBehaviour (){
@@ -117,13 +115,17 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
         };
     }
 
+    /**
+     * Funtion used only for see all State parameters in console.
+     * @param state Ringtone State object to show
+     */
     private void showStateInConsole(RingtoneState state){
         System.out.println("Hour: " + state.getHour());
         System.out.println("Minute: " + state.getMinute());
         System.out.println("Vibration: " + state.isVibration());
         System.out.println("Volume: " + state.getVolumeValue());
-        for(WeekDays day : state.getWeekDays()){
-            System.out.println("Day: " + day);
+        for (int i = 0; i < state.getWeekDays().length; i++) {
+            System.out.println("Day " + (i + 1) + " " + state.getWeekDays()[i]);
         }
     }
 
@@ -143,6 +145,4 @@ public class RingtoneStateSetActivity extends AppCompatActivity {
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
     }
-
-
 }

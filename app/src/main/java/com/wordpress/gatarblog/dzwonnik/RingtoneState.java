@@ -4,23 +4,26 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.icu.util.TimeZone;
 
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashSet;
 
 /**
  * Class with all data of ringtone state.
  */
 
 public class RingtoneState {
+    private long id;
     private int volumeValue;
     private boolean vibration;
     private int hour;
     private int minute;
-    private HashSet<WeekDays> weekDays;
+    private boolean[] weekDays;
     private Context context;
-    private HashSet<TimeEvent> timeEvents;
+    private TimeEvent timeEvent;
+
+    public RingtoneState() {
+    }
 
     public RingtoneState(int volumeValue, boolean vibration, int hour, int minute, Context context) {
         this.volumeValue = volumeValue;
@@ -28,7 +31,15 @@ public class RingtoneState {
         this.hour = hour;
         this.minute = minute;
         this.context = context;
-        timeEvents = new HashSet<>();
+        weekDays = new boolean[7];
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getVolumeValue() {
@@ -63,81 +74,93 @@ public class RingtoneState {
         this.minute = minute;
     }
 
-    public HashSet<WeekDays> getWeekDays() {
+    public boolean[] getWeekDays() {
         return weekDays;
     }
 
-    public void setWeekDays(HashSet<WeekDays> weekDays) {
+    public void setWeekDays(boolean[] weekDays) {
         this.weekDays = weekDays;
     }
+
 
     /**
      * Creates broadcast events for ringtone state switch (single event for each checked weekday)
      */
     public void useRingtoneState(){
-        removeRingtoneState();
-        timeEvents.clear();
-
-        for(WeekDays day : weekDays){
-            TimeEvent event = new TimeEvent(day);
-            event.start();
-            timeEvents.add(event);
-        }
+        timeEvent = new TimeEvent();
+        timeEvent.start();
     }
 
     /**
      * Stop all events, but not erase them.
      */
     public void removeRingtoneState(){
-        for(TimeEvent event : timeEvents){
-            event.stop();
-        }
+        timeEvent.stop();
     }
 
-    private class TimeEvent{
-        private Calendar calendar;
-        private AlarmManager alarmManager;
-        private PendingIntent alarmIntent;
-        private int dayOfWeek;
+        private class TimeEvent{
+            private Calendar calendar;
+            private AlarmManager alarmManager;
+            private PendingIntent alarmIntent;
 
-        private final String EXTRA_VIBRATION = "com.wordpress.gatarblog.dzwonnik.VIBRA";
-        private final String EXTRA_VOLUME = "com.wordpress.gatarblog.dzwonnik.VOLUME";
-        private final int ENUM_TO_WEEKDAY_COUNTER_SHIFT = 1;
+            private final String EXTRA_VIBRATION = "com.wordpress.gatarblog.dzwonnik.VIBRA";
+            private final String EXTRA_VOLUME = "com.wordpress.gatarblog.dzwonnik.VOLUME";
 
-        TimeEvent(WeekDays day) {
-            dayOfWeek = day.ordinal() + ENUM_TO_WEEKDAY_COUNTER_SHIFT;
+            void start(){
+                setTime();
+                setAlarm();
+            }
+
+            void stop(){
+                alarmManager.cancel(alarmIntent);
+            }
+
+            private void setTime(){
+                calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, hour);
+                calendar.set(Calendar.MINUTE, minute);
+            }
+
+            private void setAlarm(){
+                alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(context,RingtoneSwitcher.class);
+                intent.putExtra(EXTRA_VIBRATION,vibration);
+                intent.putExtra(EXTRA_VOLUME,volumeValue);
+                alarmIntent = PendingIntent.getBroadcast(context, generateAlarmId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+            }
+
+            private int generateAlarmId(){
+                return (int)System.currentTimeMillis()*(-1);
+            }
+
         }
 
-        void start(){
-            setTime();
-            setRepeating();
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        void stop(){
-            alarmManager.cancel(alarmIntent);
-        }
+        RingtoneState state = (RingtoneState) o;
 
-        private void setTime(){
-            calendar = Calendar.getInstance();
-            //calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.set(Calendar.DAY_OF_WEEK,dayOfWeek); //Sunday - 1, Monday - 2 etc
-            calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, minute);
-        }
+        if (id != state.id) return false;
+        if (volumeValue != state.volumeValue) return false;
+        if (vibration != state.vibration) return false;
+        if (hour != state.hour) return false;
+        if (minute != state.minute) return false;
+        return Arrays.equals(weekDays, state.weekDays);
 
-        //TODO Tu jest coś nie tak, alarm manager włącza się o określonej godzinie, ale nie działa update
-        private void setRepeating(){
-            final long INTERVAL_WEEK = AlarmManager.INTERVAL_DAY * 7;
+    }
 
-            alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(context,RingtoneSwitcher.class);
-            intent.putExtra(EXTRA_VIBRATION,vibration);
-            intent.putExtra(EXTRA_VOLUME,volumeValue);
-            int alarmId = (int)System.currentTimeMillis()*(-1);
-            System.out.println("Alarm id: " + alarmId);
-            alarmIntent = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 120000, alarmIntent);
-        }
-
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + volumeValue;
+        result = 31 * result + (vibration ? 1 : 0);
+        result = 31 * result + hour;
+        result = 31 * result + minute;
+        result = 31 * result + Arrays.hashCode(weekDays);
+        return result;
     }
 }
