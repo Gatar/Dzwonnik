@@ -8,11 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button buttonAddNew;
+    private ListView listStates;
+    private RingtoneStatesDatabase database;
 
 
     @Override
@@ -21,19 +26,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         startDailyReceiver();
 
-        final Button button = (Button) findViewById(R.id.addNewRingChange);
+        buttonAddNew = (Button) findViewById(R.id.addNewRingChange);
+        listStates = (ListView) findViewById(R.id.ringChangeList);
+        database = new RingtoneStatesDatabaseImpl(getBaseContext());
 
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toSetRingtoneStateActivity();
             }
         });
+        listStates.setAdapter(new StateListAdapter(getBaseContext(), R.layout.state_list_row, getStatesFromDatabase()));
     }
 
     private void toSetRingtoneStateActivity(){
         Intent intent = new Intent(this,SetRingtoneStateActivity.class);
         startActivity(intent);
+    }
+
+    private ArrayList<RingtoneState> getStatesFromDatabase(){
+        return database.getAllStates();
     }
 
     private void startDailyReceiver(){
