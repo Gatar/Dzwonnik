@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -19,18 +20,16 @@ public class RingtoneState {
     private int hour;
     private int minute;
     private boolean[] weekDays;
-    private Context context;
     private TimeEvent timeEvent;
 
     public RingtoneState() {
     }
 
-    public RingtoneState(int volumeValue, boolean vibration, int hour, int minute, Context context) {
+    public RingtoneState(int volumeValue, boolean vibration, int hour, int minute) {
         this.volumeValue = volumeValue;
         this.vibration = vibration;
         this.hour = hour;
         this.minute = minute;
-        this.context = context;
         weekDays = new boolean[7];
     }
 
@@ -82,15 +81,6 @@ public class RingtoneState {
         this.weekDays = weekDays;
     }
 
-
-    /**
-     * Creates broadcast events for ringtone state switch (single event for each checked weekday)
-     */
-    public void useRingtoneState(){
-        timeEvent = new TimeEvent();
-        timeEvent.start();
-    }
-
     /**
      * Stop all events, but not erase them.
      */
@@ -98,13 +88,58 @@ public class RingtoneState {
         timeEvent.stop();
     }
 
+
+    /**
+     * Creates broadcast events for ringtone state switch (single event for each checked weekday)
+     */
+    public void useRingtoneState(Context context){
+        if(shouldBeAlarmStartedNow()) {
+            timeEvent = new TimeEvent(context);
+            timeEvent.start();
+            String toastMessage = hour + ":" + minute + " ringtone set";
+            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean shouldBeAlarmStartedNow(){
+        return checkDayOfWeek() && checkActualHour();
+    }
+
+    private boolean checkDayOfWeek(){
+        return weekDays[getActualDayOfWeek()];
+    }
+
+    private boolean checkActualHour(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int actualHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int actualMinute = calendar.get(Calendar.MINUTE);
+        if(actualHour > hour) return false;
+        else if(actualHour == hour && actualMinute > minute) return false;
+        else return true;
+    }
+
+    private int getActualDayOfWeek() {
+        final int CALENDAR_DAY_OF_WEEK_SHIFT = 2;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        if (day == Calendar.SUNDAY) return 6;
+        else return day - CALENDAR_DAY_OF_WEEK_SHIFT;
+    }
+
         private class TimeEvent{
             private Calendar calendar;
             private AlarmManager alarmManager;
             private PendingIntent alarmIntent;
+            private Context context;
 
             private final String EXTRA_VIBRATION = "com.wordpress.gatarblog.dzwonnik.VIBRA";
             private final String EXTRA_VOLUME = "com.wordpress.gatarblog.dzwonnik.VOLUME";
+
+            public TimeEvent(Context context) {
+                this.context = context;
+            }
 
             void start(){
                 setTime();
@@ -127,14 +162,9 @@ public class RingtoneState {
                 Intent intent = new Intent(context,RingtoneSwitcher.class);
                 intent.putExtra(EXTRA_VIBRATION,vibration);
                 intent.putExtra(EXTRA_VOLUME,volumeValue);
-                alarmIntent = PendingIntent.getBroadcast(context, generateAlarmId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmIntent = PendingIntent.getBroadcast(context, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
-
-            private int generateAlarmId(){
-                return (int)System.currentTimeMillis()*(-1);
-            }
-
         }
 
 

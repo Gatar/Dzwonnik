@@ -25,9 +25,10 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     private CheckBox vibrationCheck;
     private CheckBox[] weekDay = new CheckBox[7];
     private TimePicker timePicker;
-    private RingtoneState state;
 
     private int volumeValue = 0;
+    private RingtoneState state;
+    private RingtoneStatesDatabase database;
 
     @Override
     public Context getBaseContext() {
@@ -38,12 +39,17 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volume_change);
+        database = createDatabaseConnection(getBaseContext());
 
         createViewObjectReferences();
 
         volumeSeek.setOnSeekBarChangeListener(volumeSeekBarBehaviour());
         acceptButton.setOnClickListener(acceptButtonBehaviour());
         deleteButton.setOnClickListener(deleteButtonBehaviour());
+    }
+
+    private RingtoneStatesDatabase createDatabaseConnection(Context context){
+        return new RingtoneStatesDatabaseImpl(context);
     }
 
     private void createViewObjectReferences(){
@@ -68,10 +74,11 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 state = createRingtoneState();
                 state.setWeekDays(getWeekDaysFromUser());
-                if(shouldBeAlarmStartedNow(state)) {
-                    state.useRingtoneState();
-                    showStateInConsole(state);
-                }
+                database.addState(state);
+
+                state.useRingtoneState(getBaseContext());
+                showStateInConsole(state);
+
                 backToMainActivity();
             }
         };
@@ -82,7 +89,12 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         int minute = timePicker.getCurrentMinute();
         boolean vibration = vibrationCheck.isChecked();
 
-        return new RingtoneState(volumeValue,vibration,hour,minute,getBaseContext());
+        if(checkIsSetMidnight(hour,minute)) minute++;
+        return new RingtoneState(volumeValue,vibration,hour,minute);
+    }
+
+    private boolean checkIsSetMidnight(int hour, int minute){
+        return (hour == 0) && (minute == 0);
     }
 
     /**
@@ -95,20 +107,6 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
             week[i] = weekDay[i].isChecked();
         }
         return week;
-    }
-
-    private boolean shouldBeAlarmStartedNow(RingtoneState state){
-        return state.getWeekDays()[getActualDayOfWeek()];
-    }
-
-    private int getActualDayOfWeek(){
-        final int CALENDAR_DAY_OF_WEEK_SHIFT = 2;
-        Calendar calendar;
-        calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        if(day == Calendar.SUNDAY) return 6;
-        else return day - CALENDAR_DAY_OF_WEEK_SHIFT;
     }
 
     private SeekBar.OnSeekBarChangeListener volumeSeekBarBehaviour (){
@@ -133,10 +131,11 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     }
 
     /**
-     * Funtion used only for see all State parameters in console.
+     * Function used only for see all State parameters in console.
      * @param state Ringtone State object to show
      */
     private void showStateInConsole(RingtoneState state){
+        System.out.println("id: " + state.getId());
         System.out.println("Hour: " + state.getHour());
         System.out.println("Minute: " + state.getMinute());
         System.out.println("Vibration: " + state.isVibration());

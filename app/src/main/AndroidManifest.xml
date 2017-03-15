@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".SetRingtoneStateActivity"></activity>
         <receiver android:name=".RingtoneSwitcher"></receiver>
+        <receiver android:name=".DailyReceiver"></receiver>
     </application>
 
 </manifest>

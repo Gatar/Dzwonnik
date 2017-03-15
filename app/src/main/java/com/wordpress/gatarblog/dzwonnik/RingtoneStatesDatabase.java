@@ -38,8 +38,9 @@ public interface RingtoneStatesDatabase {
             COLUMN_NAME_SUNDAY + "      INTEGER NOT NULL, " +
             COLUMN_NAME_MONDAY + "      INTEGER NOT NULL );";
 
+
     /**
-     * Add ringtoneState to database.
+     * Add ringtoneState to database and automatic set it's ID on referenced RingtoneState object
      * @param ringtoneState RingtoneSwitcher object to add
      */
     void addState(RingtoneState ringtoneState);

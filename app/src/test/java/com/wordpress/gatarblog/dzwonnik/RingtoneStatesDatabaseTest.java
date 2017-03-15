@@ -101,7 +101,7 @@ public class RingtoneStatesDatabaseTest {
     }
 
     private RingtoneState createAndFill(int volume, int hour, int minute, boolean vibra, boolean weekdays){
-        RingtoneState ringtoneState = new RingtoneState(volume,vibra,hour,minute,context);
+        RingtoneState ringtoneState = new RingtoneState(volume,vibra,hour,minute);
         boolean[] week = new boolean[7];
         for (int i = 0; i < week.length; i++) {
             week[i] = weekdays;

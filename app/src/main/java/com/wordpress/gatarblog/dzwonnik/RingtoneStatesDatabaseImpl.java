@@ -34,6 +34,7 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
 
         long id = db.insert(TABLE_NAME,null,values);
         ringtoneState.setId(id);
+        db.close();
     }
 
     @Override
@@ -43,6 +44,7 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
         ContentValues values = fillContentStateValues(ringtoneState);
 
         db.update(TABLE_NAME,values,where,whereArgs);
+        db.close();
     }
 
     @Override
@@ -66,6 +68,7 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
             );
         }
 
+        db.close();
         return ringtoneStates;
     }
 
@@ -77,12 +80,14 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
         String[] whereArgs = new String[]{String.valueOf(ringtoneState.getId())};
 
         db.delete(TABLE_NAME,where,whereArgs);
+        db.close();
     }
 
     @Override
     public void cleanDatabase() {
         db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME);
+        db.close();
     }
 
     private ContentValues fillContentStateValues(RingtoneState ringtoneState){
