@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -13,7 +14,7 @@ import java.util.Calendar;
  * Class with all data of ringtone state.
  */
 
-public class RingtoneState {
+public class RingtoneState implements Serializable {
     private long id;
     private int volumeValue;
     private boolean vibration;

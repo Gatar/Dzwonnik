@@ -11,7 +11,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.util.Calendar;
 
 /**
  * Class responsible for get from user information to create new/update existing single ringtone sets state.
@@ -30,6 +29,8 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     private RingtoneState state;
     private RingtoneStatesDatabase database;
 
+    private final String RINGTONE_STATE_EXTRA = "RingtoneState";
+
     @Override
     public Context getBaseContext() {
         return super.getBaseContext();
@@ -46,6 +47,36 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         volumeSeek.setOnSeekBarChangeListener(volumeSeekBarBehaviour());
         acceptButton.setOnClickListener(acceptButtonBehaviour());
         deleteButton.setOnClickListener(deleteButtonBehaviour());
+
+        checkRingtoneStatePresence();
+    }
+
+    /**
+     * Check is there in Intent extras {@link RingtoneState} object and read them.
+     */
+    private void checkRingtoneStatePresence(){
+        RingtoneState state = (RingtoneState) getIntent().getSerializableExtra(RINGTONE_STATE_EXTRA);
+        if(state != null){
+
+            //TODO add something to update the alarm
+            this.state = state;
+            loadRingtoneStateToView(state);
+        }
+    }
+
+    /**
+     * Put {@link RingtoneState} object values into the UI view.
+     * @param state object to put
+     */
+    private void loadRingtoneStateToView(RingtoneState state){
+        volumeSeek.setProgress(state.getVolumeValue());
+        volumeTextView.setText(String.valueOf(state.getVolumeValue()));
+        for (int i = 0; i < state.getWeekDays().length; i++) {
+            weekDay[i].setChecked(state.getWeekDays()[i]);
+        }
+        vibrationCheck.setChecked(state.isVibration());
+        timePicker.setCurrentHour(state.getHour());
+        timePicker.setCurrentMinute(state.getMinute());
     }
 
     private RingtoneStatesDatabase createDatabaseConnection(Context context){
