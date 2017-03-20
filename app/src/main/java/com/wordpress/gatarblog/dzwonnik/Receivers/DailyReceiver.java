@@ -1,9 +1,13 @@
-package com.wordpress.gatarblog.dzwonnik;
+package com.wordpress.gatarblog.dzwonnik.Receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
+
+import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
+import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
+import com.wordpress.gatarblog.dzwonnik.RingtoneState;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,13 +24,11 @@ public class DailyReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("~~~~~~~~Zmiana dzwonków na dziś zostanie ustawiona");
         this.context = context;
         database = createDatabaseConnection(context);
         ringtoneStates = loadRingtoneStatesFromDB();
         setTodayRingtoneStatesAlarms();
-        makeToast("Zmiana dzwonków na dziś ustawiona");
-        System.out.println("~~~~~~~~~~Zmiana dzwonków na dziś jest ustawiona");
+        makeToast("The bells shall ring like bloody hell!!!");
     }
 
     private ArrayList<RingtoneState> loadRingtoneStatesFromDB(){
@@ -61,6 +63,6 @@ public class DailyReceiver extends BroadcastReceiver {
     }
 
     private void makeToast(String message){
-        Toast.makeText(context,message,Toast.LENGTH_LONG).show();
+        Toast.makeText(context,message,Toast.LENGTH_SHORT).show();
     }
 }

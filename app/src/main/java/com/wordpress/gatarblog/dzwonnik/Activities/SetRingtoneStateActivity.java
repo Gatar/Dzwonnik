@@ -1,4 +1,4 @@
-package com.wordpress.gatarblog.dzwonnik;
+package com.wordpress.gatarblog.dzwonnik.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,11 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
+import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
+import com.wordpress.gatarblog.dzwonnik.R;
+import com.wordpress.gatarblog.dzwonnik.RingtoneState;
 
 
 /**
@@ -57,8 +62,6 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     private void checkRingtoneStatePresence(){
         RingtoneState state = (RingtoneState) getIntent().getSerializableExtra(RINGTONE_STATE_EXTRA);
         if(state != null){
-
-            //TODO add something to update the alarm
             this.state = state;
             loadRingtoneStateToView(state);
         }
@@ -103,25 +106,38 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                state = createRingtoneState();
-                state.setWeekDays(getWeekDaysFromUser());
-                database.addState(state);
-
-                state.useRingtoneState(getBaseContext());
-                showStateInConsole(state);
-
+                if(isStateAlreadyExist()) {
+                    fillRingtoneState();
+                    database.updateState(state);
+                    showStateInConsole(state);
+                    state.useRingtoneState(getBaseContext());
+                }else {
+                    state = new RingtoneState();
+                    fillRingtoneState();
+                    database.addState(state);
+                    showStateInConsole(state);
+                    state.useRingtoneState(getBaseContext());
+                }
                 backToMainActivity();
             }
         };
     }
 
-    private RingtoneState createRingtoneState(){
-        int hour = timePicker.getCurrentHour();
-        int minute = timePicker.getCurrentMinute();
-        boolean vibration = vibrationCheck.isChecked();
+    /**
+     * Check does state object exist.
+     * @return true - state exist, should be only updated; false - state not exist, should be created.
+     */
+    private boolean isStateAlreadyExist(){
+        return state != null;
+    }
 
-        if(checkIsSetMidnight(hour,minute)) minute++;
-        return new RingtoneState(volumeValue,vibration,hour,minute);
+    private void fillRingtoneState(){
+        state.setHour(timePicker.getCurrentHour());
+        state.setMinute(timePicker.getCurrentMinute());
+        if(checkIsSetMidnight(state.getHour(),state.getMinute())) state.setMinute(1);
+        state.setVibration(vibrationCheck.isChecked());
+        state.setVolumeValue(volumeValue);
+        state.setWeekDays(getWeekDaysFromUser());
     }
 
     private boolean checkIsSetMidnight(int hour, int minute){
@@ -181,7 +197,8 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(state != null){
-                    state.removeRingtoneState();
+                    state.removeRingtoneState(getBaseContext());
+                    database.deleteState(state);
                 }
                 backToMainActivity();
             }

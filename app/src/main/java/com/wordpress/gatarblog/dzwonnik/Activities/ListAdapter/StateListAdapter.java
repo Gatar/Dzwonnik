@@ -1,4 +1,4 @@
-package com.wordpress.gatarblog.dzwonnik;
+package com.wordpress.gatarblog.dzwonnik.Activities.ListAdapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.wordpress.gatarblog.dzwonnik.R;
+import com.wordpress.gatarblog.dzwonnik.RingtoneState;
 
 import java.util.ArrayList;
 

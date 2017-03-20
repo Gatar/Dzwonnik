@@ -1,4 +1,4 @@
-package com.wordpress.gatarblog.dzwonnik;
+package com.wordpress.gatarblog.dzwonnik.Activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,9 +11,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.wordpress.gatarblog.dzwonnik.Receivers.DailyReceiver;
+import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
+import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
+import com.wordpress.gatarblog.dzwonnik.R;
+import com.wordpress.gatarblog.dzwonnik.RingtoneState;
+import com.wordpress.gatarblog.dzwonnik.Activities.ListAdapter.StateListAdapter;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,11 +51,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private AdapterView.OnItemClickListener setListViewListener(){
-        System.out.println("1111111`");
         return new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("2222222222");
                 RingtoneState state = (RingtoneState) listStates.getItemAtPosition(position);
                 toSetRingtoneStateActivity(state);
             }

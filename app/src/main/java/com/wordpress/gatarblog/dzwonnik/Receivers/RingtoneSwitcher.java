@@ -1,4 +1,4 @@
-package com.wordpress.gatarblog.dzwonnik;
+package com.wordpress.gatarblog.dzwonnik.Receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

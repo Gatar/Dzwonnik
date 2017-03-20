@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.wordpress.gatarblog.dzwonnik.Receivers.RingtoneSwitcher;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -83,9 +85,10 @@ public class RingtoneState implements Serializable {
     }
 
     /**
-     * Stop all events, but not erase them.
+     * Stop all events, but not erase them. Method creates timeEvent if it not exist. It's necessary for stop pending alarm.
      */
-    public void removeRingtoneState(){
+    public void removeRingtoneState(Context context){
+        if(timeEvent == null) timeEvent = new TimeEvent(context);
         timeEvent.stop();
     }
 
@@ -132,6 +135,7 @@ public class RingtoneState implements Serializable {
         private class TimeEvent{
             private Calendar calendar;
             private AlarmManager alarmManager;
+            private Intent intent;
             private PendingIntent alarmIntent;
             private Context context;
 
@@ -144,11 +148,21 @@ public class RingtoneState implements Serializable {
 
             void start(){
                 setTime();
+                createIntentsAndAlarmManager();
                 setAlarm();
             }
 
             void stop(){
+                createIntentsAndAlarmManager();
                 alarmManager.cancel(alarmIntent);
+            }
+
+            private void createIntentsAndAlarmManager(){
+                alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                intent = new Intent(context,RingtoneSwitcher.class);
+                intent.putExtra(EXTRA_VIBRATION,vibration);
+                intent.putExtra(EXTRA_VOLUME,volumeValue);
+                alarmIntent = PendingIntent.getBroadcast(context, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             }
 
             private void setTime(){
@@ -159,11 +173,6 @@ public class RingtoneState implements Serializable {
             }
 
             private void setAlarm(){
-                alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(context,RingtoneSwitcher.class);
-                intent.putExtra(EXTRA_VIBRATION,vibration);
-                intent.putExtra(EXTRA_VOLUME,volumeValue);
-                alarmIntent = PendingIntent.getBroadcast(context, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
         }

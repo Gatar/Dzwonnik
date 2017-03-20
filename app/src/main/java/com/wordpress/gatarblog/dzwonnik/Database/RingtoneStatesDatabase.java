@@ -1,4 +1,6 @@
-package com.wordpress.gatarblog.dzwonnik;
+package com.wordpress.gatarblog.dzwonnik.Database;
+
+import com.wordpress.gatarblog.dzwonnik.RingtoneState;
 
 import java.util.ArrayList;
 

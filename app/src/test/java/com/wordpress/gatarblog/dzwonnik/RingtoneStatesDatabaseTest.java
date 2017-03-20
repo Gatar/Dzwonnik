@@ -2,6 +2,9 @@ package com.wordpress.gatarblog.dzwonnik;
 
 import android.content.Context;
 
+import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
+import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
