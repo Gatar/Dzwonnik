@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -27,6 +28,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     private Button acceptButton;
     private Button deleteButton;
     private CheckBox vibrationCheck;
+    private CheckBox silentCheck;
     private CheckBox[] weekDay = new CheckBox[7];
     private TimePicker timePicker;
 
@@ -52,6 +54,8 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         volumeSeek.setOnSeekBarChangeListener(volumeSeekBarBehaviour());
         acceptButton.setOnClickListener(acceptButtonBehaviour());
         deleteButton.setOnClickListener(deleteButtonBehaviour());
+        vibrationCheck.setOnCheckedChangeListener(vibrationCheckBoxBehaviour());
+        silentCheck.setOnCheckedChangeListener(silentCheckBoxBehaviour());
 
         checkRingtoneStatePresence();
     }
@@ -78,6 +82,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
             weekDay[i].setChecked(state.getWeekDays()[i]);
         }
         vibrationCheck.setChecked(state.isVibration());
+        silentCheck.setChecked(state.isSilent());
         timePicker.setCurrentHour(state.getHour());
         timePicker.setCurrentMinute(state.getMinute());
     }
@@ -92,6 +97,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         acceptButton = (Button) findViewById(R.id.buttonAccept);
         deleteButton = (Button) findViewById(R.id.buttonDelete);
         vibrationCheck = (CheckBox) findViewById(R.id.checkVibra);
+        silentCheck = (CheckBox) findViewById(R.id.checkSilent);
         weekDay[0] = (CheckBox) findViewById(R.id.checkMonday);
         weekDay[1] = (CheckBox) findViewById(R.id.checkTuesday);
         weekDay[2] = (CheckBox) findViewById(R.id.checkWednesday);
@@ -124,6 +130,40 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     }
 
     /**
+     * Checking on vibration automatically turn volume to 0 and disable silent mode.
+     * @return behariouv anonymous class CompoundButton.OnCheckedChangeListener
+     */
+    private CompoundButton.OnCheckedChangeListener vibrationCheckBoxBehaviour(){
+        return new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    disableSilent();
+                    volumeSeek.setProgress(0);
+                    volumeTextView.setText("0 / 7");
+                }
+            }
+        };
+    }
+
+    /**
+     * Checking on silent automatically turn volume to 0 and disable vibration mode.
+     * @return behariouv anonymous class CompoundButton.OnCheckedChangeListener
+     */
+    private CompoundButton.OnCheckedChangeListener silentCheckBoxBehaviour(){
+        return new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    disableVibration();
+                    volumeSeek.setProgress(0);
+                    volumeTextView.setText("0 / 7");
+                }
+            }
+        };
+    }
+
+    /**
      * Check does state object exist.
      * @return true - state exist, should be only updated; false - state not exist, should be created.
      */
@@ -136,6 +176,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         state.setMinute(timePicker.getCurrentMinute());
         if(checkIsSetMidnight(state.getHour(),state.getMinute())) state.setMinute(1);
         state.setVibration(vibrationCheck.isChecked());
+        state.setSilent(silentCheck.isChecked());
         state.setVolumeValue(volumeValue);
         state.setWeekDays(getWeekDaysFromUser());
     }
@@ -162,6 +203,10 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressStart, boolean fromUser) {
                 volumeValue = progressStart;
+                if(volumeValue > 0){
+                    disableSilent();
+                    disableVibration();
+                }
             }
 
             @Override
@@ -171,10 +216,18 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                String volumeText = String.valueOf(volumeValue) + " %";
+                String volumeText = String.valueOf(volumeValue) + " / 7";
                 volumeTextView.setText(volumeText);
             }
         };
+    }
+
+    private void disableSilent(){
+        silentCheck.setChecked(false);
+    }
+
+    private void disableVibration(){
+        vibrationCheck.setChecked(false);
     }
 
     /**
@@ -186,6 +239,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         System.out.println("Hour: " + state.getHour());
         System.out.println("Minute: " + state.getMinute());
         System.out.println("Vibration: " + state.isVibration());
+        System.out.println("Silence: " + state.isSilent());
         System.out.println("Volume: " + state.getVolumeValue());
         for (int i = 0; i < state.getWeekDays().length; i++) {
             System.out.println("Day " + (i + 1) + " " + state.getWeekDays()[i]);

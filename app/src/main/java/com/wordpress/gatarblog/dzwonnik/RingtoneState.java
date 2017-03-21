@@ -20,6 +20,7 @@ public class RingtoneState implements Serializable {
     private long id;
     private int volumeValue;
     private boolean vibration;
+    private boolean silent;
     private int hour;
     private int minute;
     private boolean[] weekDays;
@@ -58,6 +59,15 @@ public class RingtoneState implements Serializable {
 
     public void setVibration(boolean vibration) {
         this.vibration = vibration;
+    }
+
+
+    public boolean isSilent() {
+        return silent;
+    }
+
+    public void setSilent(boolean silent) {
+        this.silent = silent;
     }
 
     public int getHour() {
@@ -140,6 +150,7 @@ public class RingtoneState implements Serializable {
             private Context context;
 
             private final String EXTRA_VIBRATION = "com.wordpress.gatarblog.dzwonnik.VIBRA";
+            private final String EXTRA_SILENT = "com.wordpress.gatarblog.dzwonnik.SILENT";
             private final String EXTRA_VOLUME = "com.wordpress.gatarblog.dzwonnik.VOLUME";
 
             public TimeEvent(Context context) {
@@ -162,6 +173,7 @@ public class RingtoneState implements Serializable {
                 intent = new Intent(context,RingtoneSwitcher.class);
                 intent.putExtra(EXTRA_VIBRATION,vibration);
                 intent.putExtra(EXTRA_VOLUME,volumeValue);
+                intent.putExtra(EXTRA_SILENT,silent);
                 alarmIntent = PendingIntent.getBroadcast(context, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             }
 
@@ -176,33 +188,4 @@ public class RingtoneState implements Serializable {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
         }
-
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RingtoneState state = (RingtoneState) o;
-
-        if (id != state.id) return false;
-        if (volumeValue != state.volumeValue) return false;
-        if (vibration != state.vibration) return false;
-        if (hour != state.hour) return false;
-        if (minute != state.minute) return false;
-        return Arrays.equals(weekDays, state.weekDays);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + volumeValue;
-        result = 31 * result + (vibration ? 1 : 0);
-        result = 31 * result + hour;
-        result = 31 * result + minute;
-        result = 31 * result + Arrays.hashCode(weekDays);
-        return result;
-    }
 }

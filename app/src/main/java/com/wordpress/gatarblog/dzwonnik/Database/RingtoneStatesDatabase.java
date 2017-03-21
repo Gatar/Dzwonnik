@@ -9,12 +9,13 @@ import java.util.ArrayList;
  */
 public interface RingtoneStatesDatabase {
 
-    String DATABASE_NAME = "switcherDatabase.db";
+    String DATABASE_NAME = "switcherDB.db";
     String TABLE_NAME = "switchers";
 
     String COLUMN_NAME_ID = "id";
     String COLUMN_NAME_VOLUME = "volume";
     String COLUMN_NAME_VIBRATION = "vibration";
+    String COLUMN_NAME_SILENT = "silent";
     String COLUMN_NAME_HOUR = "hour";
     String COLUMN_NAME_MINUTE = "minute";
     String COLUMN_NAME_MONDAY = "monday";
@@ -30,6 +31,7 @@ public interface RingtoneStatesDatabase {
             COLUMN_NAME_ID + "          INTEGER   PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_NAME_VOLUME + "      INTEGER NOT NULL, " +
             COLUMN_NAME_VIBRATION + "   INTEGER NOT NULL, " +
+            COLUMN_NAME_SILENT + "   INTEGER NOT NULL, " +
             COLUMN_NAME_HOUR + "        INTEGER NOT NULL, " +
             COLUMN_NAME_MINUTE + "      INTEGER NOT NULL, " +
             COLUMN_NAME_TUESDAY + "      INTEGER NOT NULL, " +

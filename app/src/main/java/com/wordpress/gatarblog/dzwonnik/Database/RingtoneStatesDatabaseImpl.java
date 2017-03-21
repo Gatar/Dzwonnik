@@ -90,6 +90,7 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
     public void cleanDatabase() {
         db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME);
+        db.delete(TABLE_NAME,null,null);
         db.close();
     }
 
@@ -102,6 +103,7 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_VOLUME,ringtoneState.getVolumeValue());
         values.put(COLUMN_NAME_VIBRATION,parseBooleanToSQLiteInteger(ringtoneState.isVibration()));
+        values.put(COLUMN_NAME_SILENT,parseBooleanToSQLiteInteger(ringtoneState.isSilent()));
         values.put(COLUMN_NAME_HOUR,ringtoneState.getHour());
         values.put(COLUMN_NAME_MINUTE,ringtoneState.getMinute());
 
@@ -131,6 +133,7 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
         readState.setHour(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_HOUR)));
         readState.setMinute(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_MINUTE)));
         readState.setVibration(parseIntegerSQLiteToBoolean(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_VIBRATION))));
+        readState.setSilent(parseIntegerSQLiteToBoolean(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_SILENT))));
 
         boolean[] ringtoneStateWeekDays = new boolean[7];
         for (int i = 0; i < ringtoneStateWeekDays.length; i++) {

@@ -82,31 +82,42 @@
         android:layout_centerHorizontal="true" />
 
     <SeekBar
+        android:id="@+id/seekVolume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textVolume"
-        android:layout_alignStart="@+id/buttonAccept"
-        android:id="@+id/seekVolume"
         android:layout_alignEnd="@+id/buttonDelete"
-        android:max="100" />
+        android:layout_alignStart="@+id/buttonAccept"
+        android:layout_below="@+id/textVolumePercent"
+        android:max="7"
+        android:progress="3" />
 
     <CheckBox
-        android:text="Wibracja"
+        android:id="@+id/checkVibra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/checkVibra"
-        android:layout_below="@+id/seekVolume"
         android:layout_alignStart="@+id/seekVolume"
+        android:layout_below="@+id/seekVolume"
         android:layout_marginTop="15dp"
-        android:checked="true" />
+        android:checked="false"
+        android:text="Tylko wibracja" />
+
+    <CheckBox
+        android:id="@+id/checkSilent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/checkVibra"
+        android:layout_alignBottom="@+id/checkVibra"
+        android:layout_toEndOf="@+id/checkVibra"
+        android:checked="false"
+        android:text="Cisza" />
 
     <TextView
-        android:text="0"
+        android:id="@+id/textVolumePercent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textVolume"
         android:layout_alignEnd="@+id/seekVolume"
-        android:id="@+id/textVolumePercent" />
+        android:layout_alignTop="@+id/textVolume"
+        android:text="3 / 7" />
 
     <Button
         android:text="Akceptuj"
