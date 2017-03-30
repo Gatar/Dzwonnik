@@ -24,6 +24,7 @@ import com.wordpress.gatarblog.dzwonnik.Activities.ListAdapter.StateListAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayList<RingtoneState> getStatesFromDatabase() {
-        return database.getAllStates();
+        ArrayList<RingtoneState> states = database.getAllStates();
+        Collections.sort(states);
+        return states;
     }
 
     /**

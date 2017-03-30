@@ -16,7 +16,7 @@ import java.util.Calendar;
  * Class with all data of ringtone state.
  */
 
-public class RingtoneState implements Serializable {
+public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     private long id;
     private int volumeValue;
     private boolean vibration;
@@ -140,6 +140,12 @@ public class RingtoneState implements Serializable {
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         if (day == Calendar.SUNDAY) return 6;
         else return day - CALENDAR_DAY_OF_WEEK_SHIFT;
+    }
+
+    @Override
+    public int compareTo(RingtoneState state2){
+        if(this.getHour() != state2.getHour()) return (getHour() > state2.getHour()) ? 1 : -1;
+        else return (getMinute() > state2.getMinute()) ? 1 : -1;
     }
 
         private class TimeEvent{
