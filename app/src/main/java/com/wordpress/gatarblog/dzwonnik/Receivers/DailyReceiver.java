@@ -13,9 +13,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Receiver started everyday at 00:00 or after restart the phone.
+ * Receiver started everyday at 00:00 or after restart the phone (provided by {@link OnBootReceiver})
  */
-
 public class DailyReceiver extends BroadcastReceiver {
 
     private Context context;
@@ -29,6 +28,7 @@ public class DailyReceiver extends BroadcastReceiver {
         ringtoneStates = loadRingtoneStatesFromDB();
         setTodayRingtoneStatesAlarms();
         makeToast("The bells shall ring like bloody hell!!!");
+        System.out.println("The bells shall ring like bloody hell!!!");
     }
 
     private ArrayList<RingtoneState> loadRingtoneStatesFromDB(){
@@ -40,16 +40,21 @@ public class DailyReceiver extends BroadcastReceiver {
     }
 
     private void setTodayRingtoneStatesAlarms(){
-        int actualDayOfWeek = getActualDayOfWeek();
         for (RingtoneState ringtoneState : ringtoneStates) {
-            if(shouldBeAlarmStartedNow(ringtoneState,actualDayOfWeek)){
+            if(shouldBeAlarmStartedNow(ringtoneState)){
                 ringtoneState.useRingtoneState(context);
             }
         }
     }
 
-    private boolean shouldBeAlarmStartedNow(RingtoneState state, int dayOfWeek){
-        return state.getWeekDays()[dayOfWeek];
+    /**
+     * Check is today weekday set as true in ringtone state object (to start the alarm).
+     * @param state received state
+     * @return true - alarm should be started today, false - alarm mustn't be started today
+     */
+    private boolean shouldBeAlarmStartedNow(RingtoneState state){
+        int actualDayOfWeek = getActualDayOfWeek();
+        return state.getWeekDays()[actualDayOfWeek];
     }
 
     private int getActualDayOfWeek(){

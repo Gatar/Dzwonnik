@@ -39,19 +39,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         startDailyReceiver();
+        database = new RingtoneStatesDatabaseImpl(getBaseContext());
 
         buttonAddNew = (Button) findViewById(R.id.addNewRingChange);
         listStates = (ListView) findViewById(R.id.ringChangeList);
-        database = new RingtoneStatesDatabaseImpl(getBaseContext());
 
-        buttonAddNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toSetRingtoneStateActivity();
-            }
-        });
+        buttonAddNew.setOnClickListener(newRingtoneStateButtonBehaviour());
         listStates.setAdapter(new StateListAdapter(getBaseContext(), R.layout.state_list_row, getStatesFromDatabase()));
         listStates.setOnItemClickListener(setListViewListener());
+
         grantDoNotDisturbAccess();
     }
 
@@ -65,10 +61,18 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    private View.OnClickListener newRingtoneStateButtonBehaviour(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toSetRingtoneStateActivity();
+            }
+        };
+    }
+
     private void toSetRingtoneStateActivity() {
         Intent intent = new Intent(this, SetRingtoneStateActivity.class);
         startActivity(intent);
-
     }
 
     private void toSetRingtoneStateActivity(RingtoneState state) {
@@ -81,12 +85,15 @@ public class MainActivity extends AppCompatActivity {
         return database.getAllStates();
     }
 
+    /**
+     * Start DailyReceiver, which set on all alarms on this day. Could be started multiple times because alarms are updated if exists before.
+     */
     private void startDailyReceiver() {
         Context context = this.getBaseContext();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 20);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, DailyReceiver.class);
@@ -94,10 +101,12 @@ public class MainActivity extends AppCompatActivity {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
+    /**
+     * Ask user for permission to change DoNotDisturb mode.
+     */
     private void grantDoNotDisturbAccess() {
         NotificationManager notificationManager =
                 (NotificationManager) getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                 && !notificationManager.isNotificationPolicyAccessGranted())
         {
