@@ -16,7 +16,7 @@ public class RingtoneSwitcher extends BroadcastReceiver {
     private final String EXTRA_VIBRATION = "com.wordpress.gatarblog.dzwonnik.VIBRA";
     private final String EXTRA_VOLUME = "com.wordpress.gatarblog.dzwonnik.VOLUME";
     private final String EXTRA_SILENT = "com.wordpress.gatarblog.dzwonnik.SILENT";
-    private final int USER_VOLUME_CHANGE_RANGE = 7;
+    private final float USER_VOLUME_CHANGE_RANGE = 7f;
     private AudioManager audioManager;
 
     @Override
@@ -52,13 +52,25 @@ public class RingtoneSwitcher extends BroadcastReceiver {
 
     /**
      * Set colume value of selected stream adapting volume range from user (0 to 7) to range specific to chosen stream (for example for music is 0 to 14).
-     * @param newVolume value of new volume, have to be from 0 to 7
+     * @param volume value of new volume, have to be from 0 to 7
      * @param streamType AudioManager stream type
      */
-    private void setStreamVolume(int newVolume, int streamType){
-        float multiply = audioManager.getStreamMaxVolume(streamType) / USER_VOLUME_CHANGE_RANGE;
-        newVolume = (int)(newVolume*multiply);
-        System.out.println("Stream type: " + streamType + " actual new volume " + newVolume);
-        audioManager.setStreamVolume(streamType,newVolume,0);
+    private int setStreamVolume(int volume, int streamType){
+        int realMaxVolume = audioManager.getStreamMaxVolume(streamType);
+        volume = calculateNewVolume(volume,realMaxVolume);
+        System.out.println("Stream type: " + streamType + " actual new volume " + volume);
+        audioManager.setStreamVolume(streamType,volume,0);
+        return volume;
+    }
+
+    /**
+     *
+     * @param volume value of new volume, have to be from 0 to 7
+     * @param realMaxVolume maximum volume value depending on stream type
+     * @return new calculated volume for set on stream rounded down to closest multiply of 7
+     */
+    private int calculateNewVolume(int volume, int realMaxVolume){
+        float multiply = (float)realMaxVolume / USER_VOLUME_CHANGE_RANGE;
+        return (int)(volume*multiply);
     }
 }
