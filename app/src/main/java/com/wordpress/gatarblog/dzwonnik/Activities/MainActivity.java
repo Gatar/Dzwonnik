@@ -21,6 +21,7 @@ import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
 import com.wordpress.gatarblog.dzwonnik.R;
 import com.wordpress.gatarblog.dzwonnik.RingtoneState;
 import com.wordpress.gatarblog.dzwonnik.Activities.ListAdapter.StateListAdapter;
+import com.wordpress.gatarblog.dzwonnik.TimeManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -93,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void startDailyReceiver() {
         Context context = this.getBaseContext();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
+        Calendar calendar = TimeManager.getCalendar();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
 

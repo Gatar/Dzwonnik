@@ -17,8 +17,7 @@ import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
 import com.wordpress.gatarblog.dzwonnik.R;
 import com.wordpress.gatarblog.dzwonnik.RingtoneState;
-
-import java.util.Calendar;
+import com.wordpress.gatarblog.dzwonnik.TimeManager;
 
 
 /**
@@ -83,38 +82,16 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     private RingtoneState getActualRingtoneSettings(){
         AudioManager alarmManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
         RingtoneState state = new RingtoneState();
+        state.setId(-1);
         state.setVolumeValue(alarmManager.getStreamVolume(AudioManager.STREAM_RING));
         state.setSilent(alarmManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT);
         state.setVibration(alarmManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
-        state.getWeekDays()[getActualDayOfWeek()] = true;
-        state.setHour(getActualHour());
-        state.setMinute(getActualMinute());
+        state.getWeekDays()[TimeManager.getActualDayOfWeek()] = true;
+        state.setHour(TimeManager.getActualHour());
+        state.setMinute(TimeManager.getActualMinute());
         return state;
     }
 
-    private int getActualDayOfWeek(){
-        final int CALENDAR_DAY_OF_WEEK_SHIFT = 2;
-        Calendar calendar;
-        calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        if(day == Calendar.SUNDAY) return 6;
-        else return day - CALENDAR_DAY_OF_WEEK_SHIFT;
-    }
-
-    private int getActualHour(){
-        Calendar calendar;
-        calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        return calendar.get(Calendar.HOUR);
-    }
-
-    private int getActualMinute(){
-        Calendar calendar;
-        calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        return calendar.get(Calendar.MINUTE);
-    }
 
     /**
      * Put {@link RingtoneState} object values into the UI view.
@@ -157,7 +134,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isStateAlreadyExist()) {
+                if(isStateModified()) {
                     fillRingtoneState();
                     database.updateState(state);
                     showStateInConsole(state);
@@ -193,7 +170,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
 
     /**
      * Checking on silent automatically turn volume to 0 and disable vibration mode.
-     * @return behariouv anonymous class CompoundButton.OnCheckedChangeListener
+     * @return behaviour anonymous class CompoundButton.OnCheckedChangeListener
      */
     private CompoundButton.OnCheckedChangeListener silentCheckBoxBehaviour(){
         return new CompoundButton.OnCheckedChangeListener() {
@@ -212,8 +189,9 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
      * Check does state object exist.
      * @return true - state exist, should be only updated; false - state not exist, should be created.
      */
-    private boolean isStateAlreadyExist(){
-        return state != null;
+    private boolean isStateModified(){
+        final int STATE_NON_EXIST = -1;
+        return state.getId() != STATE_NON_EXIST;
     }
 
     private void fillRingtoneState(){

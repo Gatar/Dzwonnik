@@ -8,7 +8,7 @@ import java.util.Calendar;
 
 public class TimeManager {
 
-    private static Calendar calendar;
+    private static Calendar calendar = Calendar.getInstance();
 
     private static void refreshTime(){
         calendar.setTimeInMillis(System.currentTimeMillis());

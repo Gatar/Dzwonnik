@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
 import com.wordpress.gatarblog.dzwonnik.RingtoneState;
+import com.wordpress.gatarblog.dzwonnik.TimeManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,18 +54,7 @@ public class DailyReceiver extends BroadcastReceiver {
      * @return true - alarm should be started today, false - alarm mustn't be started today
      */
     private boolean shouldBeAlarmStartedNow(RingtoneState state){
-        int actualDayOfWeek = getActualDayOfWeek();
-        return state.getWeekDays()[actualDayOfWeek];
-    }
-
-    private int getActualDayOfWeek(){
-        final int CALENDAR_DAY_OF_WEEK_SHIFT = 2;
-        Calendar calendar;
-        calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        if(day == Calendar.SUNDAY) return 6;
-        else return day - CALENDAR_DAY_OF_WEEK_SHIFT;
+        return state.getWeekDays()[TimeManager.getActualDayOfWeek()];
     }
 
     private void makeToast(String message){

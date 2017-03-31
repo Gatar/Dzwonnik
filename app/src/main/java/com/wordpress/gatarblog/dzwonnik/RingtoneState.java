@@ -122,27 +122,17 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     }
 
     private boolean checkDayOfWeek(){
-        return weekDays[getActualDayOfWeek()];
+        return weekDays[TimeManager.getActualDayOfWeek()];
     }
 
     private boolean checkActualHour(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        int actualHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int actualMinute = calendar.get(Calendar.MINUTE);
+        int actualHour = TimeManager.getActualHour();
+        int actualMinute = TimeManager.getActualMinute();
         if(actualHour > hour) return false;
         else if(actualHour == hour && actualMinute > minute) return false;
         else return true;
     }
 
-    private int getActualDayOfWeek() {
-        final int CALENDAR_DAY_OF_WEEK_SHIFT = 2;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        if (day == Calendar.SUNDAY) return 6;
-        else return day - CALENDAR_DAY_OF_WEEK_SHIFT;
-    }
 
     @Override
     public int compareTo(RingtoneState state2){
@@ -186,8 +176,7 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
             }
 
             private void setTime(){
-                calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar = TimeManager.getCalendar();
                 calendar.set(Calendar.HOUR_OF_DAY, hour);
                 calendar.set(Calendar.MINUTE, minute);
             }
