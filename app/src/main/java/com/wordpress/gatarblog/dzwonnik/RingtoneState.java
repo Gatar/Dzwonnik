@@ -27,6 +27,7 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     private TimeEvent timeEvent;
 
     public RingtoneState() {
+        weekDays = new boolean[7];
     }
 
     public RingtoneState(int volumeValue, boolean vibration, int hour, int minute) {
@@ -111,6 +112,7 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
             timeEvent = new TimeEvent(context);
             timeEvent.start();
             String toastMessage = hour + ":" + minute + " ringtone set";
+            System.out.println(toastMessage);
             Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
         }
     }

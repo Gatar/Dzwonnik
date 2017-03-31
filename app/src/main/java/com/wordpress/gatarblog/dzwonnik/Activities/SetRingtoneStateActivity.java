@@ -2,6 +2,7 @@ package com.wordpress.gatarblog.dzwonnik.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,8 @@ import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
 import com.wordpress.gatarblog.dzwonnik.R;
 import com.wordpress.gatarblog.dzwonnik.RingtoneState;
+
+import java.util.Calendar;
 
 
 /**
@@ -57,25 +60,67 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         vibrationCheck.setOnCheckedChangeListener(vibrationCheckBoxBehaviour());
         silentCheck.setOnCheckedChangeListener(silentCheckBoxBehaviour());
 
-        checkRingtoneStatePresence();
+        loadRingtoneStateObject();
+        setRingtoneStateOnView(state);
     }
 
     /**
      * Check is there in Intent extras {@link RingtoneState} object and read them.
      */
-    private void checkRingtoneStatePresence(){
+    private void loadRingtoneStateObject(){
         RingtoneState state = (RingtoneState) getIntent().getSerializableExtra(RINGTONE_STATE_EXTRA);
         if(state != null){
             this.state = state;
-            loadRingtoneStateToView(state);
+        }else{
+            this.state = getActualRingtoneSettings();
         }
+    }
+
+    /**
+     * Get actual ringtone state values from phone settings.
+     * @return actual RingtoneState object
+     */
+    private RingtoneState getActualRingtoneSettings(){
+        AudioManager alarmManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+        RingtoneState state = new RingtoneState();
+        state.setVolumeValue(alarmManager.getStreamVolume(AudioManager.STREAM_RING));
+        state.setSilent(alarmManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT);
+        state.setVibration(alarmManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
+        state.getWeekDays()[getActualDayOfWeek()] = true;
+        state.setHour(getActualHour());
+        state.setMinute(getActualMinute());
+        return state;
+    }
+
+    private int getActualDayOfWeek(){
+        final int CALENDAR_DAY_OF_WEEK_SHIFT = 2;
+        Calendar calendar;
+        calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        if(day == Calendar.SUNDAY) return 6;
+        else return day - CALENDAR_DAY_OF_WEEK_SHIFT;
+    }
+
+    private int getActualHour(){
+        Calendar calendar;
+        calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        return calendar.get(Calendar.HOUR);
+    }
+
+    private int getActualMinute(){
+        Calendar calendar;
+        calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        return calendar.get(Calendar.MINUTE);
     }
 
     /**
      * Put {@link RingtoneState} object values into the UI view.
      * @param state object to put
      */
-    private void loadRingtoneStateToView(RingtoneState state){
+    private void setRingtoneStateOnView(RingtoneState state){
         volumeSeek.setProgress(state.getVolumeValue());
         volumeTextView.setText(String.valueOf(state.getVolumeValue()));
         for (int i = 0; i < state.getWeekDays().length; i++) {
