@@ -10,6 +10,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.wordpress.gatarblog.dzwonnik.Activities.MainActivity">
 
+    <Button
+        android:layout_width="match_parent"
+        android:text="Dodaj zmianę głosności"
+        android:id="@+id/addNewRingChange"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:elevation="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -19,23 +29,22 @@
         android:text="Godzina      -      Dni tygodnia     -     Głośność" />
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:choiceMode="singleChoice"
         android:id="@+id/ringChangeList"
-        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView" />
+        android:layout_below="@+id/textView"
+        android:layout_above="@+id/eraseDatabaseButton"
+        android:background="@android:color/transparent"
+        android:choiceMode="singleChoice" />
 
     <Button
-    android:layout_width="match_parent"
-    android:text="Dodaj zmianę głosności"
-    android:id="@+id/addNewRingChange"
-    android:textAppearance="@style/TextAppearance.AppCompat.Button"
-    android:elevation="0dp"
+        android:id="@+id/eraseDatabaseButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:text="Usuń wszystko"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="80dp"/>
 
 </RelativeLayout>

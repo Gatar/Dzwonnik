@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,9 +26,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DatabaseEraseDialog.EntityDelete {
 
     private Button buttonAddNew;
+    private Button buttonErase;
     private ListView listStates;
     private RingtoneStatesDatabase database;
 
@@ -44,9 +44,12 @@ public class MainActivity extends AppCompatActivity {
         database = new RingtoneStatesDatabaseImpl(getBaseContext());
 
         buttonAddNew = (Button) findViewById(R.id.addNewRingChange);
+        buttonErase = (Button) findViewById(R.id.eraseDatabaseButton);
         listStates = (ListView) findViewById(R.id.ringChangeList);
 
+
         buttonAddNew.setOnClickListener(newRingtoneStateButtonBehaviour());
+        buttonErase.setOnClickListener(deleteButtonBehaviour());
         listStates.setAdapter(new StateListAdapter(getBaseContext(), R.layout.state_list_row, getStatesFromDatabase()));
         listStates.setOnItemClickListener(setListViewListener());
 
@@ -68,6 +71,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 toSetRingtoneStateActivity();
+            }
+        };
+    }
+
+    private View.OnClickListener deleteButtonBehaviour(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               DatabaseEraseDialog dialog = new DatabaseEraseDialog();
+                dialog.setEntityDelete(MainActivity.this);
+                dialog.show(getSupportFragmentManager(),"delete");
             }
         };
     }
@@ -116,5 +130,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void eraseDatabaseEntities() {
+        database.cleanDatabase();
+        listStates.setAdapter(new StateListAdapter(getBaseContext(), R.layout.state_list_row, getStatesFromDatabase()));
+        Toast.makeText(this,"Lista zmiany głośności została usunięta",Toast.LENGTH_SHORT).show();
     }
 }

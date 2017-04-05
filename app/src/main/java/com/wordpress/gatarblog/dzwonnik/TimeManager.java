@@ -3,9 +3,8 @@ package com.wordpress.gatarblog.dzwonnik;
 import java.util.Calendar;
 
 /**
- * Created by bgata on 31.03.2017.
+ * Class providing actual Calendar instance and time (hour/minute) to every place which need them.
  */
-
 public class TimeManager {
 
     private static Calendar calendar = Calendar.getInstance();
@@ -24,7 +23,7 @@ public class TimeManager {
 
     public static int getActualHour(){
         refreshTime();
-        return calendar.get(Calendar.HOUR);
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
     public static int getActualMinute(){

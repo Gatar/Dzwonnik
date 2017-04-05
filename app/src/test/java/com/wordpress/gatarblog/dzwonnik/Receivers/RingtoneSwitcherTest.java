@@ -19,7 +19,7 @@ public class RingtoneSwitcherTest {
 
 
     @BeforeClass
-    public static void beforeAll() throws Exception{
+    public static void beforeAll() throws Exception {
         clazz = RingtoneSwitcher.class;
         method = clazz.getDeclaredMethod("calculateNewVolume",int.class, int.class);
         method.setAccessible(true);
@@ -27,7 +27,7 @@ public class RingtoneSwitcherTest {
     }
 
     @Test
-    public void maximumVolValueSeven() throws Exception{
+    public void maximumVolValueSeven() throws Exception {
         int volume = 2;
         int maxVol = 7;
         int expect = 2; // 2/7 * 7 = 2

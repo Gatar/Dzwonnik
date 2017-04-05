@@ -111,7 +111,7 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
         if(shouldBeAlarmStartedNow()) {
             timeEvent = new TimeEvent(context);
             timeEvent.start();
-            String toastMessage = hour + ":" + minute + " ringtone set";
+            String toastMessage = hour + ":" + ((minute < 10) ? ("0" + minute) : minute) + " ringtone set";
             System.out.println(toastMessage);
             Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
         }
@@ -128,6 +128,7 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     private boolean checkActualHour(){
         int actualHour = TimeManager.getActualHour();
         int actualMinute = TimeManager.getActualMinute();
+        System.out.println("Actual hour: " + actualHour + " vs saved time: " + hour);
         if(actualHour > hour) return false;
         else if(actualHour == hour && actualMinute > minute) return false;
         else return true;
