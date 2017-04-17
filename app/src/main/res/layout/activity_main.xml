@@ -47,19 +47,19 @@
 
     <Button
         android:id="@+id/eraseDatabaseButton"
-        android:text="- \u221e"
-        android:textColor="#FFFFFF"
-        android:textSize="28sp"
-
-        android:layout_width="119dp"
+        android:layout_width="80dp"
         android:layout_height="33dp"
+        android:layout_alignParentBottom="true"
+
+        android:layout_alignParentEnd="true"
         android:background="@drawable/db_delete_buttonshape"
         android:shadowColor="#A8A8A8"
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="17"
+        android:text="-"
 
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:textColor="#FFFFFF"
+        android:textSize="28sp" />
 
 </RelativeLayout>

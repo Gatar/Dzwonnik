@@ -44,8 +44,9 @@ public class RingtoneSwitcher extends BroadcastReceiver {
             setStreamVolume(volumeValue, AudioManager.STREAM_RING);
             setStreamVolume(volumeValue, AudioManager.STREAM_NOTIFICATION);
             setStreamVolume(volumeValue, AudioManager.STREAM_ALARM);
-            setStreamVolume(volumeValue, AudioManager.STREAM_MUSIC);
         }
+
+        setStreamVolume(volumeValue, AudioManager.STREAM_MUSIC);    //Stream music volume have to be changed always
 
         return "Zmiana głośności na: " + volumeValue + "/7" + " Vibra: " + isVibration + " Cisza: " + isSilent;
     }

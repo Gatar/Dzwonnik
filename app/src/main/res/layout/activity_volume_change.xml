@@ -18,7 +18,8 @@
         android:layout_alignBottom="@+id/checkTuesday"
         android:layout_alignEnd="@+id/timePicker"
         android:layout_alignRight="@+id/timePicker"
-        android:text="Sr" />
+        android:text="Sr"
+        android:textColor="@color/fontColor"/>
 
     <CheckBox
         android:text="Wt"
@@ -26,7 +27,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/checkTuesday"
         android:layout_above="@+id/checkThursday"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/fontColor"/>
 
     <CheckBox
         android:text="Pon"
@@ -35,7 +37,8 @@
         android:id="@+id/checkMonday"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/timePicker"
-        android:layout_alignStart="@+id/timePicker" />
+        android:layout_alignStart="@+id/timePicker"
+        android:textColor="@color/fontColor"/>
 
     <CheckBox
         android:text="Sob"
@@ -44,7 +47,8 @@
         android:id="@+id/checkSaturday"
         android:layout_below="@+id/checkWednesday"
         android:layout_alignLeft="@+id/checkWednesday"
-        android:layout_alignStart="@+id/checkWednesday" />
+        android:layout_alignStart="@+id/checkWednesday"
+        android:textColor="@color/fontColor"/>
 
     <CheckBox
         android:text="Nd"
@@ -53,7 +57,8 @@
         android:id="@+id/checkSunday"
         android:layout_below="@+id/checkFriday"
         android:layout_alignLeft="@+id/checkFriday"
-        android:layout_alignStart="@+id/checkFriday" />
+        android:layout_alignStart="@+id/checkFriday"
+        android:textColor="@color/fontColor"/>
 
     <CheckBox
         android:text="Pt"
@@ -62,7 +67,8 @@
         android:id="@+id/checkFriday"
         android:layout_below="@+id/checkTuesday"
         android:layout_alignLeft="@+id/checkTuesday"
-        android:layout_alignStart="@+id/checkTuesday" />
+        android:layout_alignStart="@+id/checkTuesday"
+        android:textColor="@color/fontColor"/>
 
     <CheckBox
         android:text="Czw"
@@ -71,7 +77,8 @@
         android:id="@+id/checkThursday"
         android:layout_below="@+id/checkMonday"
         android:layout_alignLeft="@+id/checkMonday"
-        android:layout_alignStart="@+id/checkMonday" />
+        android:layout_alignStart="@+id/checkMonday"
+        android:textColor="@color/fontColor"/>
 
     <TimePicker
         android:layout_width="wrap_content"
@@ -79,7 +86,8 @@
         android:id="@+id/timePicker"
         android:timePickerMode="spinner"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        />
 
     <SeekBar
         android:id="@+id/seekVolume"
@@ -98,7 +106,8 @@
         android:checked="false"
         android:text="Tylko wibracja"
         android:layout_below="@+id/textVolume"
-        android:layout_alignStart="@+id/textVolume" />
+        android:layout_alignStart="@+id/textVolume"
+        android:textColor="@color/fontColor"/>
 
     <CheckBox
         android:id="@+id/checkSilent"
@@ -107,7 +116,8 @@
         android:checked="false"
         android:text="Cisza"
         android:layout_below="@+id/textVolumePercent"
-        android:layout_alignStart="@+id/buttonDelete" />
+        android:layout_alignStart="@+id/buttonDelete"
+        android:textColor="@color/fontColor"/>
 
     <TextView
         android:id="@+id/textVolumePercent"

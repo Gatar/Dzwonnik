@@ -21,7 +21,7 @@ public class DatabaseEraseDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.support.v7.appcompat.R.style.Base_Theme_AppCompat_Dialog_Alert);
         builder.setMessage("Usunięcie wszystkich pozycji jest nieodwracalne!")
                 .setPositiveButton("Usuń", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

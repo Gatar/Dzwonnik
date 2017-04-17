@@ -81,7 +81,7 @@ public class StateListAdapter extends ArrayAdapter<RingtoneState> {
     private void changeOptionColor(TextView textView){
         if(textView.getText().equals(SILENT)) textView.setTextColor(Color.RED);
         else if(textView.getText().equals(VIBRA)) textView.setTextColor(Color.BLUE);
-        else textView.setTextColor(Color.BLACK);
+        else textView.setTextColor(Color.WHITE);
     }
 
     private static class StatusRowHolder{

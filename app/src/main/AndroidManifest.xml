@@ -6,17 +6,23 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/bell_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.MainActivity">
+        <activity
+            android:name=".Activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.SetRingtoneStateActivity"></activity>
+
+        <activity
+            android:name=".Activities.SetRingtoneStateActivity"
+            android:screenOrientation="portrait"></activity>
+
         <receiver android:name=".Receivers.RingtoneSwitcher"></receiver>
         <receiver android:name=".Receivers.DailyReceiver"></receiver>
         <receiver android:name=".Receivers.OnBootReceiver"
