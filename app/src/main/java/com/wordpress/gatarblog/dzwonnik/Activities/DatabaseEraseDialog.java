@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
+import com.wordpress.gatarblog.dzwonnik.R;
+
 /**
  * Creating dialog box for ask user is he sure about delete all alarm states.
  */
@@ -22,14 +24,14 @@ public class DatabaseEraseDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.support.v7.appcompat.R.style.Base_Theme_AppCompat_Dialog_Alert);
-        builder.setMessage("Usunięcie wszystkich pozycji jest nieodwracalne!")
-                .setPositiveButton("Usuń", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.delete_database_message)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         checkEntityDeleteReference();
                         entityDelete.eraseDatabaseEntities();
                     }
                 })
-                .setNegativeButton("Powrót", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                     }

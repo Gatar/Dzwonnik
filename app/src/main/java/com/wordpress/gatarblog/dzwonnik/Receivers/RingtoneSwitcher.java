@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.widget.Toast;
 
-import java.util.Calendar;
+import com.wordpress.gatarblog.dzwonnik.R;
 
 /**
  * Class use for set actual value of volume/vibration as BroadcastReceiver.
@@ -22,8 +22,7 @@ public class RingtoneSwitcher extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        String message = setSelectedStream(intent);
-        System.out.println(message);
+        String message = setSelectedStream(context, intent);
         Toast.makeText(context,message,Toast.LENGTH_LONG).show();
     }
 
@@ -32,7 +31,7 @@ public class RingtoneSwitcher extends BroadcastReceiver {
      * @param intent received intent
      * @return message for toast to user and write it in logs
      */
-    private String setSelectedStream(Intent intent){
+    private String setSelectedStream(Context context, Intent intent){
         boolean isVibration = intent.getBooleanExtra(EXTRA_VIBRATION,false);
         boolean isSilent = intent.getBooleanExtra(EXTRA_SILENT,false);
         int volumeValue = intent.getIntExtra(EXTRA_VOLUME,0);
@@ -48,7 +47,9 @@ public class RingtoneSwitcher extends BroadcastReceiver {
 
         setStreamVolume(volumeValue, AudioManager.STREAM_MUSIC);    //Stream music volume have to be changed always
 
-        return "Zmiana głośności na: " + volumeValue + "/7" + " Vibra: " + isVibration + " Cisza: " + isSilent;
+        return context.getString(R.string.volume_rate) + ": " + volumeValue + "/7 " +
+                context.getString(R.string.vibration_mode) + ": " + isVibration + " " +
+                context.getString(R.string.silent_mode) + ": " + isSilent;
     }
 
     /**
@@ -59,7 +60,6 @@ public class RingtoneSwitcher extends BroadcastReceiver {
     private int setStreamVolume(int volume, int streamType){
         int realMaxVolume = audioManager.getStreamMaxVolume(streamType);
         volume = calculateNewVolume(volume,realMaxVolume);
-        System.out.println("Stream type: " + streamType + " actual new volume " + volume);
         audioManager.setStreamVolume(streamType,volume,0);
         return volume;
     }

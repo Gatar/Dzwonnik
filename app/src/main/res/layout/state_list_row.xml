@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textListAdapterTime"
         android:layout_weight="0.8"
+        android:textAlignment="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp" />
 
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textListAdapterWeekdays"
         android:layout_weight="3"
+        android:textAlignment="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_width="85dp" />
@@ -30,6 +32,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:layout_weight="1.8"
+        android:textAlignment="center"
         android:text="TextView"
         android:textColor="@color/fontColor"/>
 

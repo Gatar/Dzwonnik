@@ -136,6 +136,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseEraseDial
     public void eraseDatabaseEntities() {
         database.cleanDatabase();
         listStates.setAdapter(new StateListAdapter(getBaseContext(), R.layout.state_list_row, getStatesFromDatabase()));
-        Toast.makeText(this,"Lista zmiany głośności została usunięta",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.database_delete_confirm_message,Toast.LENGTH_SHORT).show();
     }
 }

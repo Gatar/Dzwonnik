@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
-
 /**
  * Test of calculation new volume value basing on stream maximum value
  */

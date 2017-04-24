@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Dzwonnik</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
+    <string name="vibration_mode">Vibration</string>
+    <string name="silent_mode">Silent</string>
+    <string name="volume_rate">Volume</string>
+    <string name="mainActivity_hour">Hour</string>
+    <string name="mainActivity_weekDays">Week days</string>
+    <string name="mainActivity_volume">Volume</string>
+    <string name="delete_database_message">Do You want permanent delete all ringtone states?</string>
+    <string name="delete">Delete</string>
+    <string name="add">add</string>
+    <string name="back">Return</string>
+    <string name="database_delete_confirm_message">All ringtone states has been deleted</string>
+    <string name="today_states_set">Daily alarm states ready to fire</string>
 </resources>

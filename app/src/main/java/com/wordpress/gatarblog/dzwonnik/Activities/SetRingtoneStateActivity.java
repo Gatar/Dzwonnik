@@ -31,7 +31,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     private Button deleteButton;
     private CheckBox vibrationCheck;
     private CheckBox silentCheck;
-    private CheckBox[] weekDay = new CheckBox[7];
+    private final CheckBox[] weekDay = new CheckBox[7];
     private TimePicker timePicker;
 
     private int volumeValue = 0;

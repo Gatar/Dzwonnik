@@ -7,11 +7,11 @@ import android.widget.Toast;
 
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
+import com.wordpress.gatarblog.dzwonnik.R;
 import com.wordpress.gatarblog.dzwonnik.RingtoneState;
 import com.wordpress.gatarblog.dzwonnik.TimeManager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Receiver started everyday at 00:00 or after restart the phone (provided by {@link OnBootReceiver})
@@ -28,7 +28,7 @@ public class DailyReceiver extends BroadcastReceiver {
         database = createDatabaseConnection(context);
         ringtoneStates = loadRingtoneStatesFromDB();
         setTodayRingtoneStatesAlarms();
-        makeToast("The bells shall ring like bloody hell!!!");
+        makeToast(context.getString(R.string.today_states_set));
         System.out.println("The bells shall ring like bloody hell!!!");
     }
 

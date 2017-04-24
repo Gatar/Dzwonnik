@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Dzwonnik</string>
+    <string name="monday">Pon</string>
+    <string name="tuesday">Wt</string>
+    <string name="wednesday">Sr</string>
+    <string name="thursday">Czw</string>
+    <string name="friday">Pt</string>
+    <string name="saturday">Sob</string>
+    <string name="sunday">Nd</string>
+    <string name="vibration_mode">Wibracja</string>
+    <string name="silent_mode">Cisza</string>
+    <string name="volume_rate">Głośność</string>
+    <string name="mainActivity_hour">Godzina</string>
+    <string name="mainActivity_weekDays">Dni tygodnia</string>
+    <string name="mainActivity_volume">Głośność</string>
+    <string name="delete_database_message">Czy chcesz usunąć wszystkie zapisane stany głośności?</string>
+    <string name="delete">Usuń</string>
+    <string name="add">Dodaj</string>
+    <string name="back">Powrót</string>
+    <string name="database_delete_confirm_message">Lista zmiany głośności została usunięta</string>
+    <string name="today_states_set">Dzisiejsze zmiany dzwonka załadowane</string>
+</resources>

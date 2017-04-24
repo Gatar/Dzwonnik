@@ -28,8 +28,8 @@ public class RingtoneStatesDatabaseTest {
     private Context context;
     private RingtoneStatesDatabase database;
 
-    private RingtoneState stateFirst = createAndFill(20, 10, 30, true, false);
-    private RingtoneState stateSecond = createAndFill(80, 15, 0, false, true);
+    private final RingtoneState stateFirst = createAndFill(20, 10, 30, true, false);
+    private final RingtoneState stateSecond = createAndFill(80, 15, 0, false, true);
 
     @Before
     public void setUp() throws Exception {

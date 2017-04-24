@@ -45,7 +45,6 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
         String where = COLUMN_NAME_ID + "= ?";
         String [] whereArgs = new String[]{String.valueOf(ringtoneState.getId())};
         ContentValues values = fillUpdateRingtoneState(ringtoneState);
-        System.out.println(ringtoneState.getId() + " ++++++++++++++++++++++++++++++++++++++++++++++   ");
         db.update(TABLE_NAME,values,where,whereArgs);
         db.close();
     }

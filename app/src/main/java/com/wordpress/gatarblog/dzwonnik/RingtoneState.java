@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.wordpress.gatarblog.dzwonnik.Receivers.RingtoneSwitcher;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -111,7 +110,7 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
         if(shouldBeAlarmStartedNow()) {
             timeEvent = new TimeEvent(context);
             timeEvent.start();
-            String toastMessage = hour + ":" + ((minute < 10) ? ("0" + minute) : minute) + " ringtone set";
+            String toastMessage = hour + ":" + ((minute < 10) ? ("0" + minute) : minute) + " \uD83D\uDD50";
             System.out.println(toastMessage);
             Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
         }
@@ -128,7 +127,6 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     private boolean checkActualHour(){
         int actualHour = TimeManager.getActualHour();
         int actualMinute = TimeManager.getActualMinute();
-        System.out.println("Actual hour: " + actualHour + " vs saved time: " + hour);
         if(actualHour > hour) return false;
         else if(actualHour == hour && actualMinute > minute) return false;
         else return true;
@@ -146,7 +144,7 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
             private AlarmManager alarmManager;
             private Intent intent;
             private PendingIntent alarmIntent;
-            private Context context;
+            private final Context context;
 
             private final String EXTRA_VIBRATION = "com.wordpress.gatarblog.dzwonnik.VIBRA";
             private final String EXTRA_SILENT = "com.wordpress.gatarblog.dzwonnik.SILENT";

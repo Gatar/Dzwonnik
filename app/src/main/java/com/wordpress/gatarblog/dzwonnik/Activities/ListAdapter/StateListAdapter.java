@@ -1,15 +1,12 @@
 package com.wordpress.gatarblog.dzwonnik.Activities.ListAdapter;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.wordpress.gatarblog.dzwonnik.R;
@@ -23,16 +20,18 @@ import java.util.ArrayList;
 
 public class StateListAdapter extends ArrayAdapter<RingtoneState> {
 
-    private Context context;
-    private int layoutResourceId;
+    private final Context context;
+    private final int layoutResourceId;
 
-    private final String SILENT = "Cisza";
-    private final String VIBRA = "Vibra";
+    private final String SILENT;
+    private final String VIBRA;
 
     public StateListAdapter(Context context, int layoutResourceId, ArrayList<RingtoneState> objects) {
         super(context, layoutResourceId, objects);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
+        SILENT = context.getString(R.string.silent_mode);
+        VIBRA = context.getString(R.string.vibration_mode);
     }
 
     @NonNull
@@ -65,7 +64,15 @@ public class StateListAdapter extends ArrayAdapter<RingtoneState> {
 
     private String getWeekdays(RingtoneState state){
         String weekdays = "";
-        String[] weekDayNameShort = {"Pon", "Wt", "Sr", "Czw", "Pt", "So", "Nd"};
+        final String[] weekDayNameShort = {
+                context.getString(R.string.monday),
+                context.getString(R.string.tuesday),
+                context.getString(R.string.wednesday),
+                context.getString(R.string.thursday),
+                context.getString(R.string.friday),
+                context.getString(R.string.saturday),
+                context.getString(R.string.sunday)};
+
         for (int i = 0; i < state.getWeekDays().length; i++) {
             if(state.getWeekDays()[i]) weekdays += weekDayNameShort[i] + " ";
         }
