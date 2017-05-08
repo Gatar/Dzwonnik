@@ -19,4 +19,5 @@
     <string name="back">Return</string>
     <string name="database_delete_confirm_message">All ringtone states has been deleted</string>
     <string name="today_states_set">Daily alarm states ready to fire</string>
+    <string name="normalMode">Normal</string>
 </resources>

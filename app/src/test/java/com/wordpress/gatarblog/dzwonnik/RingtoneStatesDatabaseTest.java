@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
+import com.wordpress.gatarblog.dzwonnik.States.RingtoneState;
 
 import org.junit.After;
 import org.junit.Before;
@@ -73,7 +74,7 @@ public class RingtoneStatesDatabaseTest {
 
     public void updateState() throws Exception {
         //given
-        stateFirst.setVolumeValue(0);
+        stateFirst.setRingtoneVolumeValue(0);
         stateFirst.setHour(5);
         stateFirst.setMinute(9);
         stateFirst.setVibration(false);

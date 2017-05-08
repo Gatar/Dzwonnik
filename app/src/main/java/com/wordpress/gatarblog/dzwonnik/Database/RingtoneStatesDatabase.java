@@ -1,6 +1,6 @@
 package com.wordpress.gatarblog.dzwonnik.Database;
 
-import com.wordpress.gatarblog.dzwonnik.RingtoneState;
+import com.wordpress.gatarblog.dzwonnik.States.RingtoneState;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,10 @@ public interface RingtoneStatesDatabase {
     String TABLE_NAME = "switchers";
 
     String COLUMN_NAME_ID = "id";
-    String COLUMN_NAME_VOLUME = "volume";
+    String COLUMN_NAME_VOLUME_RING = "volumeRing";
+    String COLUMN_NAME_VOLUME_NOTIFICATION = "volumeNotification";
+    String COLUMN_NAME_VOLUME_SYSTEM = "volumeSystem";
+    String COLUMN_NAME_VOLUME_MEDIA = "volumeMedia";
     String COLUMN_NAME_VIBRATION = "vibration";
     String COLUMN_NAME_SILENT = "silent";
     String COLUMN_NAME_HOUR = "hour";
@@ -29,7 +32,10 @@ public interface RingtoneStatesDatabase {
 
     String SQL_CREATE_TABLE_SWITCHER = "CREATE TABLE " + TABLE_NAME + "(" +
             COLUMN_NAME_ID + "          INTEGER   PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_NAME_VOLUME + "      INTEGER NOT NULL, " +
+            COLUMN_NAME_VOLUME_RING + "      INTEGER NOT NULL, " +
+            COLUMN_NAME_VOLUME_NOTIFICATION + "      INTEGER NOT NULL, " +
+            COLUMN_NAME_VOLUME_SYSTEM + "      INTEGER NOT NULL, " +
+            COLUMN_NAME_VOLUME_MEDIA + "      INTEGER NOT NULL, " +
             COLUMN_NAME_VIBRATION + "   INTEGER NOT NULL, " +
             COLUMN_NAME_SILENT + "   INTEGER NOT NULL, " +
             COLUMN_NAME_HOUR + "        INTEGER NOT NULL, " +

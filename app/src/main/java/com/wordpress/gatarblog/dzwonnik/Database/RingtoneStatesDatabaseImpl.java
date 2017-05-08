@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.wordpress.gatarblog.dzwonnik.RingtoneState;
+import com.wordpress.gatarblog.dzwonnik.States.RingtoneState;
+import com.wordpress.gatarblog.dzwonnik.States.VolumeValues;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,6 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
     public void addState(RingtoneState ringtoneState) {
         db = this.getWritableDatabase();
         ContentValues values = fillNewRingtoneState(ringtoneState);
-
         long id = db.insert(TABLE_NAME,null,values);
         ringtoneState.setId(id);
         db.close();
@@ -100,7 +100,11 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
      */
     private ContentValues fillNewRingtoneState(RingtoneState ringtoneState){
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME_VOLUME,ringtoneState.getVolumeValue());
+        VolumeValues volumeValues = ringtoneState.getVolumeValues();
+        values.put(COLUMN_NAME_VOLUME_RING,volumeValues.getVolumeRingtone());
+        values.put(COLUMN_NAME_VOLUME_NOTIFICATION,volumeValues.getVolumeNotification());
+        values.put(COLUMN_NAME_VOLUME_SYSTEM,volumeValues.getVolumeSystem());
+        values.put(COLUMN_NAME_VOLUME_MEDIA,volumeValues.getVolumeMedia());
         values.put(COLUMN_NAME_VIBRATION,parseBooleanToSQLiteInteger(ringtoneState.isVibration()));
         values.put(COLUMN_NAME_SILENT,parseBooleanToSQLiteInteger(ringtoneState.isSilent()));
         values.put(COLUMN_NAME_HOUR,ringtoneState.getHour());
@@ -128,7 +132,7 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
         RingtoneState readState = new RingtoneState();
 
         readState.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_ID)));
-        readState.setVolumeValue(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_VOLUME)));
+        readState.setRingtoneVolumeValue(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_VOLUME_RING)));
         readState.setHour(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_HOUR)));
         readState.setMinute(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_MINUTE)));
         readState.setVibration(parseIntegerSQLiteToBoolean(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_VIBRATION))));
@@ -139,6 +143,13 @@ public class RingtoneStatesDatabaseImpl extends SQLiteOpenHelper implements Ring
             ringtoneStateWeekDays[i] = parseIntegerSQLiteToBoolean(cursor.getInt(cursor.getColumnIndex(WEEK_DAYS[i])));
         }
         readState.setWeekDays(ringtoneStateWeekDays);
+
+        VolumeValues readVolumeValues = new VolumeValues(
+                cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_VOLUME_RING)),
+                cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_VOLUME_NOTIFICATION)),
+                cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_VOLUME_SYSTEM)),
+                cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_VOLUME_MEDIA)));
+        readState.setVolumeValues(readVolumeValues);
 
         return readState;
     }

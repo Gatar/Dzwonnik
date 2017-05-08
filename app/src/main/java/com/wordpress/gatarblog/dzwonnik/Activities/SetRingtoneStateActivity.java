@@ -10,13 +10,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
 import com.wordpress.gatarblog.dzwonnik.R;
-import com.wordpress.gatarblog.dzwonnik.RingtoneState;
+import com.wordpress.gatarblog.dzwonnik.States.VolumeValues;
+import com.wordpress.gatarblog.dzwonnik.States.RingtoneState;
 import com.wordpress.gatarblog.dzwonnik.TimeManager;
 
 
@@ -61,6 +63,21 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
 
         loadRingtoneStateObject();
         setRingtoneStateOnView(state);
+
+        TabHost host = (TabHost)findViewById(R.id.tabHost);
+        host.setup();
+
+        //Tab 1
+        TabHost.TabSpec spec = host.newTabSpec("Main");
+        spec.setContent(R.id.main);
+        spec.setIndicator("Main");
+        host.addTab(spec);
+
+        //Tab 2
+        spec = host.newTabSpec("Volume");
+        spec.setContent(R.id.volume);
+        spec.setIndicator("Volume");
+        host.addTab(spec);
     }
 
     /**
@@ -82,8 +99,13 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     private RingtoneState getActualRingtoneSettings(){
         AudioManager alarmManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
         RingtoneState state = new RingtoneState();
+        VolumeValues volumeValues = new VolumeValues(
+                alarmManager.getStreamVolume(AudioManager.STREAM_RING),
+                alarmManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION),
+                alarmManager.getStreamVolume(AudioManager.STREAM_SYSTEM),
+                alarmManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        state.setVolumeValues(volumeValues);
         state.setId(-1);
-        state.setVolumeValue(alarmManager.getStreamVolume(AudioManager.STREAM_RING));
         state.setSilent(alarmManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT);
         state.setVibration(alarmManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
         state.getWeekDays()[TimeManager.getActualDayOfWeek()] = true;
@@ -98,8 +120,8 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
      * @param state object to put
      */
     private void setRingtoneStateOnView(RingtoneState state){
-        volumeSeek.setProgress(state.getVolumeValue());
-        volumeTextView.setText(String.valueOf(state.getVolumeValue()));
+        volumeSeek.setProgress(state.getRingtoneVolumeValue());
+        volumeTextView.setText(String.valueOf(state.getRingtoneVolumeValue()));
         for (int i = 0; i < state.getWeekDays().length; i++) {
             weekDay[i].setChecked(state.getWeekDays()[i]);
         }
@@ -200,7 +222,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         if(checkIsSetMidnight(state.getHour(),state.getMinute())) state.setMinute(1);
         state.setVibration(vibrationCheck.isChecked());
         state.setSilent(silentCheck.isChecked());
-        state.setVolumeValue(volumeValue);
+        state.setRingtoneVolumeValue(volumeValue);
         state.setWeekDays(getWeekDaysFromUser());
     }
 
@@ -263,7 +285,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
         System.out.println("Minute: " + state.getMinute());
         System.out.println("Vibration: " + state.isVibration());
         System.out.println("Silence: " + state.isSilent());
-        System.out.println("Volume: " + state.getVolumeValue());
+        System.out.println("Volume: " + state.getRingtoneVolumeValue());
         for (int i = 0; i < state.getWeekDays().length; i++) {
             System.out.println("Day " + (i + 1) + " " + state.getWeekDays()[i]);
         }

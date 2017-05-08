@@ -18,7 +18,7 @@ import com.wordpress.gatarblog.dzwonnik.Receivers.DailyReceiver;
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabase;
 import com.wordpress.gatarblog.dzwonnik.Database.RingtoneStatesDatabaseImpl;
 import com.wordpress.gatarblog.dzwonnik.R;
-import com.wordpress.gatarblog.dzwonnik.RingtoneState;
+import com.wordpress.gatarblog.dzwonnik.States.RingtoneState;
 import com.wordpress.gatarblog.dzwonnik.Activities.ListAdapter.StateListAdapter;
 import com.wordpress.gatarblog.dzwonnik.TimeManager;
 

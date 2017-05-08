@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.widget.Toast;
 
 import com.wordpress.gatarblog.dzwonnik.R;
+import com.wordpress.gatarblog.dzwonnik.States.VolumeValues;
 
 /**
  * Class use for set actual value of volume/vibration as BroadcastReceiver.
@@ -34,20 +35,20 @@ public class RingtoneSwitcher extends BroadcastReceiver {
     private String setSelectedStream(Context context, Intent intent){
         boolean isVibration = intent.getBooleanExtra(EXTRA_VIBRATION,false);
         boolean isSilent = intent.getBooleanExtra(EXTRA_SILENT,false);
-        int volumeValue = intent.getIntExtra(EXTRA_VOLUME,0);
+        VolumeValues volumeValues = (VolumeValues) intent.getSerializableExtra(EXTRA_VOLUME);
 
         if(isSilent) audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
         else if(isVibration) audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
         else{
             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            setStreamVolume(volumeValue, AudioManager.STREAM_RING);
-            setStreamVolume(volumeValue, AudioManager.STREAM_NOTIFICATION);
-            setStreamVolume(volumeValue, AudioManager.STREAM_ALARM);
+            setStreamVolume(volumeValues.getVolumeRingtone(), AudioManager.STREAM_RING);
+            setStreamVolume(volumeValues.getVolumeNotification(), AudioManager.STREAM_NOTIFICATION);
+            setStreamVolume(volumeValues.getVolumeSystem(), AudioManager.STREAM_SYSTEM);
         }
 
-        setStreamVolume(volumeValue, AudioManager.STREAM_MUSIC);    //Stream music volume have to be changed always
+        setStreamVolume(volumeValues.getVolumeMedia(), AudioManager.STREAM_MUSIC);    //Stream music volume have to be changed always
 
-        return context.getString(R.string.volume_rate) + ": " + volumeValue + "/7 " +
+        return context.getString(R.string.volume_rate) + ": " + volumeValues.getVolumeRingtone() + "/7 " +
                 context.getString(R.string.vibration_mode) + ": " + isVibration + " " +
                 context.getString(R.string.silent_mode) + ": " + isSilent;
     }

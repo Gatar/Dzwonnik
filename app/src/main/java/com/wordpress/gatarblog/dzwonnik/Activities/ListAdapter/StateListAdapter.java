@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.wordpress.gatarblog.dzwonnik.R;
-import com.wordpress.gatarblog.dzwonnik.RingtoneState;
+import com.wordpress.gatarblog.dzwonnik.States.RingtoneState;
 
 import java.util.ArrayList;
 
@@ -82,7 +82,7 @@ public class StateListAdapter extends ArrayAdapter<RingtoneState> {
     private String createTextOption(RingtoneState state){
         if(state.isSilent()) return SILENT;
         if(state.isVibration()) return VIBRA;
-        return state.getVolumeValue() + " / 7";
+        return state.getRingtoneVolumeValue() + " / 7";
     }
 
     private void changeOptionColor(TextView textView){

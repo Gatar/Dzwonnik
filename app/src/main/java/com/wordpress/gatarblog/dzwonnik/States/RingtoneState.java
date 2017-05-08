@@ -1,4 +1,4 @@
-package com.wordpress.gatarblog.dzwonnik;
+package com.wordpress.gatarblog.dzwonnik.States;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.wordpress.gatarblog.dzwonnik.Receivers.RingtoneSwitcher;
+import com.wordpress.gatarblog.dzwonnik.TimeManager;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -17,7 +18,8 @@ import java.util.Calendar;
 
 public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     private long id;
-    private int volumeValue;
+    private int ringtoneVolumeValue;
+    private VolumeValues volumeValues;
     private boolean vibration;
     private boolean silent;
     private int hour;
@@ -29,8 +31,9 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
         weekDays = new boolean[7];
     }
 
-    public RingtoneState(int volumeValue, boolean vibration, int hour, int minute) {
-        this.volumeValue = volumeValue;
+    public RingtoneState(int ringtoneVolumeValue, boolean vibration, int hour, int minute) {
+        this.ringtoneVolumeValue = ringtoneVolumeValue;
+        volumeValues = new VolumeValues(ringtoneVolumeValue);
         this.vibration = vibration;
         this.hour = hour;
         this.minute = minute;
@@ -45,12 +48,20 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
         this.id = id;
     }
 
-    public int getVolumeValue() {
-        return volumeValue;
+    public int getRingtoneVolumeValue() {
+        return volumeValues.getVolumeRingtone();
     }
 
-    public void setVolumeValue(int volumeValue) {
-        this.volumeValue = volumeValue;
+    public void setRingtoneVolumeValue(int ringtoneVolumeValue) {
+        volumeValues.setVolumeRingtone(ringtoneVolumeValue);
+    }
+
+    public VolumeValues getVolumeValues() {
+        return volumeValues;
+    }
+
+    public void setVolumeValues(VolumeValues volumeValues) {
+        this.volumeValues = volumeValues;
     }
 
     public boolean isVibration() {
@@ -60,7 +71,6 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     public void setVibration(boolean vibration) {
         this.vibration = vibration;
     }
-
 
     public boolean isSilent() {
         return silent;
@@ -116,6 +126,18 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
         }
     }
 
+    /**
+     * Set volume value as the same for every streams
+     * @param volumeValue value of volume to set up
+     */
+    public void setAllRingtoneSameValue(int volumeValue){
+        volumeValues.setVolumeRingtone(volumeValue);
+        volumeValues.setVolumeNotification(volumeValue);
+        volumeValues.setVolumeMedia(volumeValue);
+        volumeValues.setVolumeSystem(volumeValue);
+    }
+
+
     private boolean shouldBeAlarmStartedNow(){
         return checkDayOfWeek() && checkActualHour();
     }
@@ -169,7 +191,7 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
                 alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
                 intent = new Intent(context,RingtoneSwitcher.class);
                 intent.putExtra(EXTRA_VIBRATION,vibration);
-                intent.putExtra(EXTRA_VOLUME,volumeValue);
+                intent.putExtra(EXTRA_VOLUME,volumeValues);
                 intent.putExtra(EXTRA_SILENT,silent);
                 alarmIntent = PendingIntent.getBroadcast(context, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             }
