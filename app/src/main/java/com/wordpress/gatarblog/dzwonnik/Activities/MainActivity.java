@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseEraseDial
     private ListView listStates;
     private RingtoneStatesDatabase database;
 
-    private final String RINGTONE_STATE_EXTRA = "RingtoneState";
+    private final String EXTRA_RINGTONE_STATE = "com.wordpress.gatarblog.dzwonnik.RingtoneState";
 
 
     @Override
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseEraseDial
 
     private void toSetRingtoneStateActivity(RingtoneState state) {
         Intent intent = new Intent(this, SetRingtoneStateActivity.class);
-        intent.putExtra(RINGTONE_STATE_EXTRA, state);
+        intent.putExtra(EXTRA_RINGTONE_STATE, state);
         startActivity(intent);
     }
 

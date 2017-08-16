@@ -4,10 +4,13 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.wordpress.gatarblog.dzwonnik.Receivers.RingtoneSwitcher;
 import com.wordpress.gatarblog.dzwonnik.TimeManager;
+
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -17,27 +20,31 @@ import java.util.Calendar;
  */
 
 public class RingtoneState implements Serializable, Comparable<RingtoneState> {
+
+    private static final long serialVersionUID = 6541265L;
+
     private long id;
     private int ringtoneVolumeValue;
-    private VolumeValues volumeValues;
     private boolean vibration;
     private boolean silent;
     private int hour;
     private int minute;
     private boolean[] weekDays;
-    private TimeEvent timeEvent;
+    private VolumeValues volumeValues;
+
+    private transient TimeEvent timeEvent;
 
     public RingtoneState() {
+        volumeValues = new VolumeValues(ringtoneVolumeValue);
         weekDays = new boolean[7];
     }
 
     public RingtoneState(int ringtoneVolumeValue, boolean vibration, int hour, int minute) {
+        this();
         this.ringtoneVolumeValue = ringtoneVolumeValue;
-        volumeValues = new VolumeValues(ringtoneVolumeValue);
         this.vibration = vibration;
         this.hour = hour;
         this.minute = minute;
-        weekDays = new boolean[7];
     }
 
     public long getId() {
@@ -107,8 +114,8 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     /**
      * Stop all events, but not erase them. Method creates timeEvent if it not exist. It's necessary for stop pending alarm.
      */
-    public void removeRingtoneState(Context context){
-        if(timeEvent == null) timeEvent = new TimeEvent(context);
+    public void removeRingtoneState(Context context) {
+        if (timeEvent == null) timeEvent = new TimeEvent(context, this);
         timeEvent.stop();
     }
 
@@ -116,9 +123,9 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     /**
      * Creates broadcast events for ringtone state switch (single event for each checked weekday)
      */
-    public void useRingtoneState(Context context){
-        if(shouldBeAlarmStartedNow()) {
-            timeEvent = new TimeEvent(context);
+    public void useRingtoneState(Context context) {
+        if (shouldBeAlarmStartedNow()) {
+            timeEvent = new TimeEvent(context, this);
             timeEvent.start();
             String toastMessage = hour + ":" + ((minute < 10) ? ("0" + minute) : minute) + " \uD83D\uDD50";
             System.out.println(toastMessage);
@@ -128,9 +135,10 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
 
     /**
      * Set volume value as the same for every streams
+     *
      * @param volumeValue value of volume to set up
      */
-    public void setAllRingtoneSameValue(int volumeValue){
+    public void setAllRingtoneSameValue(int volumeValue) {
         volumeValues.setVolumeRingtone(volumeValue);
         volumeValues.setVolumeNotification(volumeValue);
         volumeValues.setVolumeMedia(volumeValue);
@@ -138,72 +146,72 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     }
 
 
-    private boolean shouldBeAlarmStartedNow(){
+    private boolean shouldBeAlarmStartedNow() {
         return checkDayOfWeek() && checkActualHour();
     }
 
-    private boolean checkDayOfWeek(){
+    private boolean checkDayOfWeek() {
         return weekDays[TimeManager.getActualDayOfWeek()];
     }
 
-    private boolean checkActualHour(){
+    private boolean checkActualHour() {
         int actualHour = TimeManager.getActualHour();
         int actualMinute = TimeManager.getActualMinute();
-        if(actualHour > hour) return false;
-        else if(actualHour == hour && actualMinute > minute) return false;
+        if (actualHour > hour) return false;
+        else if (actualHour == hour && actualMinute > minute) return false;
         else return true;
     }
 
 
     @Override
-    public int compareTo(RingtoneState state2){
-        if(this.getHour() != state2.getHour()) return (getHour() > state2.getHour()) ? 1 : -1;
+    public int compareTo(RingtoneState state2) {
+        if (this.getHour() != state2.getHour()) return (getHour() > state2.getHour()) ? 1 : -1;
         else return (getMinute() > state2.getMinute()) ? 1 : -1;
     }
 
-        private class TimeEvent{
-            private Calendar calendar;
-            private AlarmManager alarmManager;
-            private Intent intent;
-            private PendingIntent alarmIntent;
-            private final Context context;
+    private class TimeEvent{
 
-            private final String EXTRA_VIBRATION = "com.wordpress.gatarblog.dzwonnik.VIBRA";
-            private final String EXTRA_SILENT = "com.wordpress.gatarblog.dzwonnik.SILENT";
-            private final String EXTRA_VOLUME = "com.wordpress.gatarblog.dzwonnik.VOLUME";
+        private Calendar calendar;
+        private AlarmManager alarmManager;
+        private Intent intent;
+        private PendingIntent alarmIntent;
+        private final Context context;
+        private final RingtoneState state;
 
-            public TimeEvent(Context context) {
-                this.context = context;
-            }
+        private final String EXTRA_RINGTONE_STATE = "com.wordpress.gatarblog.dzwonnik.RingtoneState";
 
-            void start(){
-                setTime();
-                createIntentsAndAlarmManager();
-                setAlarm();
-            }
-
-            void stop(){
-                createIntentsAndAlarmManager();
-                alarmManager.cancel(alarmIntent);
-            }
-
-            private void createIntentsAndAlarmManager(){
-                alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                intent = new Intent(context,RingtoneSwitcher.class);
-                intent.putExtra(EXTRA_VIBRATION,vibration);
-                intent.putExtra(EXTRA_VOLUME,volumeValues);
-                intent.putExtra(EXTRA_SILENT,silent);
-                alarmIntent = PendingIntent.getBroadcast(context, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            }
-
-            private void setTime(){
-                calendar = TimeManager.getCalendar();
-                calendar.set(Calendar.HOUR_OF_DAY, hour);
-                calendar.set(Calendar.MINUTE, minute);
-            }
-
-            private void setAlarm(){
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-            }
+        public TimeEvent(Context context, RingtoneState state) {
+            this.context = context;
+            this.state = state;
         }
+
+        void start() {
+            setTime();
+            createIntentsAndAlarmManager();
+            setAlarm();
+        }
+
+        void stop() {
+            createIntentsAndAlarmManager();
+            alarmManager.cancel(alarmIntent);
+        }
+
+        private void createIntentsAndAlarmManager() {
+            alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            intent = new Intent(context, RingtoneSwitcher.class);
+            byte[] data = SerializationUtils.serialize(state);  //passing Serializable objects directly through BroadcastReceiver can case NullPointerException
+            intent.putExtra(EXTRA_RINGTONE_STATE, data);
+            alarmIntent = PendingIntent.getBroadcast(context, (int) id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        private void setTime() {
+            calendar = TimeManager.getCalendar();
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+        }
+
+        private void setAlarm() {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+        }
+    }
 }

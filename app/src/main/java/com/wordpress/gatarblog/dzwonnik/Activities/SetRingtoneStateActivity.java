@@ -40,7 +40,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
     private RingtoneState state;
     private RingtoneStatesDatabase database;
 
-    private final String RINGTONE_STATE_EXTRA = "RingtoneState";
+    private final String EXTRA_RINGTONE_STATE = "com.wordpress.gatarblog.dzwonnik.RingtoneState";
 
     @Override
     public Context getBaseContext() {
@@ -84,7 +84,7 @@ public class SetRingtoneStateActivity extends AppCompatActivity {
      * Check is there in Intent extras {@link RingtoneState} object and read them.
      */
     private void loadRingtoneStateObject(){
-        RingtoneState state = (RingtoneState) getIntent().getSerializableExtra(RINGTONE_STATE_EXTRA);
+        RingtoneState state = (RingtoneState) getIntent().getSerializableExtra(EXTRA_RINGTONE_STATE);
         if(state != null){
             this.state = state;
         }else{

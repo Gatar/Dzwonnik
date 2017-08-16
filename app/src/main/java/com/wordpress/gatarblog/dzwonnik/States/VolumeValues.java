@@ -4,6 +4,9 @@ package com.wordpress.gatarblog.dzwonnik.States;
 import java.io.Serializable;
 
 public class VolumeValues implements Serializable{
+
+    private static final long serialVersionUID = 3241261L;
+
     private int volumeRingtone;
     private int volumeNotification;
     private int volumeSystem;
