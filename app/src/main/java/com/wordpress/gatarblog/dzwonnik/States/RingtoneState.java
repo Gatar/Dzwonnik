@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.wordpress.gatarblog.dzwonnik.Receivers.RingtoneSwitcher;
@@ -15,16 +14,20 @@ import org.apache.commons.lang3.SerializationUtils;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Class with all data of ringtone state.
  */
 
+@Getter
+@Setter
 public class RingtoneState implements Serializable, Comparable<RingtoneState> {
 
     private static final long serialVersionUID = 6541265L;
 
     private long id;
-    private int ringtoneVolumeValue;
     private boolean vibration;
     private boolean silent;
     private int hour;
@@ -35,81 +38,26 @@ public class RingtoneState implements Serializable, Comparable<RingtoneState> {
     private transient TimeEvent timeEvent;
 
     public RingtoneState() {
-        volumeValues = new VolumeValues(ringtoneVolumeValue);
         weekDays = new boolean[7];
     }
 
     public RingtoneState(int ringtoneVolumeValue, boolean vibration, int hour, int minute) {
         this();
-        this.ringtoneVolumeValue = ringtoneVolumeValue;
+        volumeValues = new VolumeValues(ringtoneVolumeValue);
         this.vibration = vibration;
         this.hour = hour;
         this.minute = minute;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
+    //TODO erase this two methods from usage in program, use only pure Volume Values
     public int getRingtoneVolumeValue() {
         return volumeValues.getVolumeRingtone();
     }
 
     public void setRingtoneVolumeValue(int ringtoneVolumeValue) {
-        volumeValues.setVolumeRingtone(ringtoneVolumeValue);
+        volumeValues = new VolumeValues(ringtoneVolumeValue);
     }
 
-    public VolumeValues getVolumeValues() {
-        return volumeValues;
-    }
-
-    public void setVolumeValues(VolumeValues volumeValues) {
-        this.volumeValues = volumeValues;
-    }
-
-    public boolean isVibration() {
-        return vibration;
-    }
-
-    public void setVibration(boolean vibration) {
-        this.vibration = vibration;
-    }
-
-    public boolean isSilent() {
-        return silent;
-    }
-
-    public void setSilent(boolean silent) {
-        this.silent = silent;
-    }
-
-    public int getHour() {
-        return hour;
-    }
-
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    public int getMinute() {
-        return minute;
-    }
-
-    public void setMinute(int minute) {
-        this.minute = minute;
-    }
-
-    public boolean[] getWeekDays() {
-        return weekDays;
-    }
-
-    public void setWeekDays(boolean[] weekDays) {
-        this.weekDays = weekDays;
-    }
 
     /**
      * Stop all events, but not erase them. Method creates timeEvent if it not exist. It's necessary for stop pending alarm.
